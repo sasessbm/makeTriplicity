@@ -11,8 +11,6 @@ public class Preprocessor {
 //				+ "タキソールは30％OFFで 元気は30%Plusで 記事URL コメント ペタ &amp;laquo; 夕張メロンの思い出 | 記事一覧 | カイシャのオモイヤ･･･ "
 //				+ "&amp;raquo; コメント ...";
 		
-		
-		
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		int recordNum = 10;
 		recordList = GetRecordList.getRecordList(recordNum);
@@ -23,10 +21,30 @@ public class Preprocessor {
 			String medicineName = recordList.get(countRecord).getMedicineName();
 			ArrayList<String> sentenceList = new ArrayList<String>();
 			sentenceList = getSentence(snippet,medicineName);
+			ArrayList<String> medicineNameList = new ArrayList<String>();
+			medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+			//String sentence = "";
 			
-			for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-				System.out.println(sentenceList.get(countSentence));
+			for(String sentence : sentenceList){
+				for(String medicineNameInList : medicineNameList){
+					if(sentence.contains(medicineNameInList)){
+						System.out.println(medicineNameInList);
+						sentence.replace(medicineNameInList,"MEDICINE");
+					}
+				}
+				//System.out.println(sentence);
 			}
+			
+//			for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
+//				
+//				sentence = sentenceList.get(countSentence);
+//				for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
+//					
+//				}
+//				if(sentence.)
+//				
+//				System.out.println(sentenceList.get(countSentence));
+//			}
 			
 			//snippet = snippet.replace(medicineName,"MEDICINE");
 			
