@@ -19,6 +19,7 @@ public class Preprocessor {
 		for(int countRecord = 0; countRecord < recordList.size(); countRecord++){
 			
 			String snippet = recordList.get(countRecord).getSnippet();
+			if(!snippet.contains("。")){ continue; }
 			String medicineName = recordList.get(countRecord).getMedicineName();
 			ArrayList<String> sentenceList = new ArrayList<String>();
 			sentenceList = getSentence(snippet,medicineName);
@@ -45,6 +46,7 @@ public class Preprocessor {
 
 	}
 	
+	//　文単位に区切る
 	public static ArrayList<String> getSentence(String snippet, String medicineName){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
@@ -56,9 +58,7 @@ public class Preprocessor {
 			sentenceList.add(snippet.substring(indexStart, indexPeriod));
 			indexStart = indexPeriod;
 		}
-		
 		return sentenceList;
-		
 	}
 
 }
