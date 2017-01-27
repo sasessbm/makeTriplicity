@@ -4,44 +4,34 @@ import java.util.ArrayList;
 
 public class Preprocessor {
 
-	public static void main(String[] args) throws Exception {
+	public static ArrayList<Record> preprocessor(ArrayList<Record> recordList){
 		
-		ArrayList<Record> recordList = new ArrayList<Record>();
-		int recordNum = 10;
-		recordList = GetRecordList.getRecordList(recordNum);
+		ArrayList<String> sentenceList = new ArrayList<String>();
 		for(int countRecord = 0; countRecord < recordList.size(); countRecord++){
 			
 			String snippet = recordList.get(countRecord).getSnippet();
-			if(!snippet.contains("。")){ continue; }
 			String medicineName = recordList.get(countRecord).getMedicineName();
-			ArrayList<String> sentenceList = new ArrayList<String>();
-			sentenceList = getSentence(snippet,medicineName);
+			
+			//"。"が無いスニペットは対象としない
+			if(!snippet.contains("。")){ continue; }
+			
+			//対象薬剤名が無いスニペットは対象としない
+			if(!snippet.contains(medicineName)){ continue; }
+			
+			//前処理
+			sentenceList = getSentence(snippet);
 			sentenceList = replaceMedicineName(sentenceList);
 			sentenceList = deleteParentheses(sentenceList);
-			for(String sentence : sentenceList){
-				System.out.println(sentence);
-			}
 			
-			
-			
-			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-//			System.out.println("Id:" +recordList.get(i).getId());
-			//System.out.println("スニペット:" + snippet);
-//			System.out.println("薬剤名:" +recordList.get(i).getMedicineName());
-//			System.out.println("病名:" +recordList.get(i).getDiseaseName());
-//			System.out.println("性別:" +recordList.get(i).getSex());
-//			System.out.println("ブログタイトル:" +recordList.get(i).getTitle_blog());
-//			System.out.println("ブログ記事タイトル:" +recordList.get(i).getTitle_blogArticle());
-//			System.out.println("ブログ記事ＵＲＬ:" +recordList.get(i).getUrl_blogArticle());
-//			System.out.println("年齢:" +recordList.get(i).getAge());
-			
+			//sentenceListセット
+			recordList.get(countRecord).setSentenceList(sentenceList);
 		}
 		
-
+		return recordList;
 	}
 	
 	//文単位に区切る
-	public static ArrayList<String> getSentence(String snippet, String medicineName){
+	public static ArrayList<String> getSentence(String snippet){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
 		int indexStart = -1;
@@ -93,9 +83,7 @@ public class Preprocessor {
 				indexParenthesesRight = sentence.indexOf(")", indexStart + 1);
 				if(indexParenthesesLeft == -1){ break; }
 				if(indexParenthesesLeft < indexParenthesesRight){
-					//System.out.println("()発見");
 					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-					//System.out.println("()の中身：" + textInParentheses);
 					if(!textInParentheses.contains("MEDICINE")){
 						sentence = sentence.replace(textInParentheses, "");
 						sentenceList.set(countSentence, sentence);
@@ -114,9 +102,7 @@ public class Preprocessor {
 				indexParenthesesRight = sentence.indexOf("）", indexStart + 1);
 				if(indexParenthesesLeft == -1){ break; }
 				if(indexParenthesesLeft < indexParenthesesRight){
-					//System.out.println("（）発見");
 					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-					//System.out.println("（）の中身：" + textInParentheses);
 					if(!textInParentheses.contains("MEDICINE")){
 						sentence = sentence.replace(textInParentheses, "");
 						sentenceList.set(countSentence, sentence);

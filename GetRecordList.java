@@ -42,9 +42,10 @@ public class GetRecordList {
 				ResultSet rs = stm.executeQuery(sql);
 
 				while(rs.next()){
-					record = new Record(id, rs.getString("snippet"), rs.getString("medicineName"), rs.getString("diseaseName"), 
-										rs.getString("sex"),rs.getString("title_blog"),rs.getString("title_blogArticle"),
-										rs.getString("url_blogArticle"),rs.getString("age"),rs.getString("blogArticle") );
+					record = new Record(rs.getInt("id"), rs.getString("snippet"), rs.getString("medicineName"), 
+										rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
+										rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
+										rs.getString("age"),rs.getString("blogArticle") );
 					recordList.add(record);
 				}
 			}
