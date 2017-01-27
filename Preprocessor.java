@@ -28,11 +28,10 @@ public class Preprocessor {
 			for(String sentence : sentenceList){
 				for(String medicineNameInList : medicineNameList){
 					if(sentence.contains(medicineNameInList)){
-						System.out.println(medicineNameInList);
-						sentence.replace(medicineNameInList,"MEDICINE");
+						sentence = sentence.replace(medicineNameInList,"MEDICINE");
 					}
 				}
-				//System.out.println(sentence);
+				System.out.println(sentence);
 			}
 			
 //			for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
