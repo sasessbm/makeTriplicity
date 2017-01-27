@@ -74,21 +74,42 @@ public class Preprocessor {
 		return sentenceList;
 	}
 	
-//	//薬剤名を含まない()削除
-//	public static ArrayList<String> deleteParentheses(ArrayList<String> sentenceList){
-//		
-//		String sentence = "";
-//		int indexStart = 0;
-//		int indexPeriod = -1;
-//		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-//			sentence = sentenceList.get(countSentence);
-//			if(sentence.contains("(")){
-//				indexPeriod = sentence.indexOf("(", indexStart + 1);
+	//薬剤名を含まない()削除
+	public static ArrayList<String> deleteParentheses(ArrayList<String> sentenceList){
+		
+		String sentence = "";
+		String textInParentheses = "";
+		int indexStart = -1;
+		int indexParenthesesLeft = -1;
+		int indexParenthesesRight = -1;
+		
+		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
+			sentence = sentenceList.get(countSentence);
+			
+			while (true){
+				indexParenthesesLeft = sentence.indexOf("(", indexStart + 1);
+				indexParenthesesRight = sentence.indexOf(")", indexStart + 1);
+				if(indexParenthesesLeft < indexParenthesesRight){
+					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
+					if(!textInParentheses.contains("MEDICINE")){
+						sentence = 
+					}
+				}
+			}
+			
+//			while (true){
+//				if(sentence.contains("(") || sentence.contains(")")){
+//					indexParenthesesLeft = sentence.indexOf("(", indexStart + 1);
+//					if(indexParenthesesLeft == -1){ break; }
+//					indexParenthesesRight = sentence.indexOf(")", indexParenthesesLeft + 1);
+//				}
+//				break;
 //			}
-//		}
-//		
-//		return sentenceList; 
-//	}
+			
+		}
+		
+		return sentenceList; 
+	}
 	
 
 }
