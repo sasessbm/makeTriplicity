@@ -27,8 +27,8 @@ public class MakeTriplicity {
 			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
 			System.out.println("年齢:" +record.getAge());
 			
-			if(record.getSentenceList() != null){
-				for(String sentence : record.getSentenceList()){
+			if(record.getSnippet().getSentenceList() != null){
+				for(String sentence : record.getSnippet().getSentenceList()){
 					System.out.println(sentence);
 				}
 			}else{

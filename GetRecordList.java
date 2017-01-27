@@ -23,7 +23,7 @@ public class GetRecordList {
 		try {
 			// JDBCドライバのロード - JDBC4.0（JDK1.6）以降は不要
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			
+
 			// MySQLに接続
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/tobyo_db?useSSL=false", "root", "databasetest86");
 			//con = DriverManager.getConnection("jdbc:mysql://localhost:3306/testdb?useSSL=false", "root", "databasetest86");
@@ -32,20 +32,22 @@ public class GetRecordList {
 			Statement stm = con.createStatement();
 
 			String sql = "";
-			
-			
+
+
 			//とりあえず最初の recordNum 個を取得
 			for(int id =1; id <= recordNum; id++){
 				Record record;
+				Snippet snippet;
 				//sql = "select snippet from testTable where id = " + id;
 				sql = "select * from tobyo_table where id = " + id;
 				ResultSet rs = stm.executeQuery(sql);
 
 				while(rs.next()){
-					record = new Record(rs.getInt("id"), rs.getString("snippet"), rs.getString("medicineName"), 
-										rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
-										rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
-										rs.getString("age"),rs.getString("blogArticle") );
+					snippet = new Snippet(rs.getString("snippet"));
+					record = new Record(rs.getInt("id"), snippet, rs.getString("medicineName"), 
+							rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
+							rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
+							rs.getString("age"),rs.getString("blogArticle") );
 					recordList.add(record);
 				}
 			}
@@ -65,7 +67,7 @@ public class GetRecordList {
 				}
 			}
 		}
-		
+
 		return recordList;
 
 	}

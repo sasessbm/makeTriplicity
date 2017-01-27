@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Record {
 	
 	private int id;
-	private String snippet;
+	private Snippet snippet;
 	private String medicineName;
 	private String diseaseName;
 	private String sex;
@@ -14,10 +14,10 @@ public class Record {
 	private String url_blogArticle;
 	private String age;
 	private String blogArticle;
-	private ArrayList<String> sentenceList;
+	//private ArrayList<String> sentenceList;
 	
 	//コンストラクタ
-	public Record(int id, String snippet, String medicineName,
+	public Record(int id, Snippet snippet, String medicineName,
 			String diseaseName, String sex, String title_blog,
 			String title_blogArticle, String url_blogArticle, String age,
 			String blogArticle) {
@@ -37,11 +37,7 @@ public class Record {
 		return id;
 	}
 
-//	public void setId(int id) {
-//		this.id = id;
-//	}
-
-	public String getSnippet() {
+	public Snippet getSnippet() {
 		return snippet;
 	}
 
@@ -81,12 +77,12 @@ public class Record {
 		return blogArticle;
 	}
 
-	public void setSentenceList(ArrayList<String> sentenceList) {
-		this.sentenceList = sentenceList;
-	}
-
-	public ArrayList<String> getSentenceList() {
-		return sentenceList;
-	}
+//	public void setSentenceList(ArrayList<String> sentenceList) {
+//		this.sentenceList = sentenceList;
+//	}
+//
+//	public ArrayList<String> getSentenceList() {
+//		return sentenceList;
+//	}
 
 }

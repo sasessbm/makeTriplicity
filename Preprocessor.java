@@ -7,24 +7,27 @@ public class Preprocessor {
 	public static ArrayList<Record> preprocessor(ArrayList<Record> recordList){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
-		for(int countRecord = 0; countRecord < recordList.size(); countRecord++){
+		
+		for(Record record : recordList){
 			
-			String snippet = recordList.get(countRecord).getSnippet();
-			String medicineName = recordList.get(countRecord).getMedicineName();
+			Snippet snippet = record.getSnippet();
+			String snippetText = snippet.getSnippetText();
+			String medicineName = record.getMedicineName();
 			
 			//"。"が無いスニペットは対象としない
-			if(!snippet.contains("。")){ continue; }
+			if(!snippetText.contains("。")){ continue; }
 			
 			//対象薬剤名が無いスニペットは対象としない
-			if(!snippet.contains(medicineName)){ continue; }
+			if(!snippetText.contains(medicineName)){ continue; }
 			
 			//前処理
-			sentenceList = getSentence(snippet);
+			sentenceList = getSentence(snippetText);
 			sentenceList = replaceMedicineName(sentenceList);
 			sentenceList = deleteParentheses(sentenceList);
 			
 			//sentenceListセット
-			recordList.get(countRecord).setSentenceList(sentenceList);
+			snippet.setSentenceList(sentenceList);
+			
 		}
 		
 		return recordList;
