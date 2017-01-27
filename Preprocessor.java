@@ -3,38 +3,9 @@ package makeTriplicity;
 import java.util.ArrayList;
 
 public class Preprocessor {
-
-	public static ArrayList<Record> preprocessor(ArrayList<Record> recordList){
-		
-		ArrayList<String> sentenceList = new ArrayList<String>();
-		
-		for(Record record : recordList){
-			
-			Snippet snippet = record.getSnippet();
-			String snippetText = snippet.getSnippetText();
-			String medicineName = record.getMedicineName();
-			
-			//"。"が無いスニペットは対象としない
-			if(!snippetText.contains("。")){ continue; }
-			
-			//対象薬剤名が無いスニペットは対象としない
-			if(!snippetText.contains(medicineName)){ continue; }
-			
-			//前処理
-			sentenceList = getSentence(snippetText);
-			sentenceList = replaceMedicineName(sentenceList);
-			sentenceList = deleteParentheses(sentenceList);
-			
-			//sentenceListセット
-			snippet.setSentenceList(sentenceList);
-			
-		}
-		
-		return recordList;
-	}
 	
 	//文単位に区切る
-	public static ArrayList<String> getSentence(String snippet){
+	public static ArrayList<String> getSentenceList(String snippet){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
 		int indexStart = -1;
