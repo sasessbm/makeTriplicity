@@ -17,6 +17,7 @@ public class Preprocessor {
 			ArrayList<String> sentenceList = new ArrayList<String>();
 			sentenceList = getSentence(snippet,medicineName);
 			sentenceList = replaceMedicineName(sentenceList);
+			sentenceList = deleteParentheses(sentenceList);
 			for(String sentence : sentenceList){
 				System.out.println(sentence);
 			}
@@ -86,25 +87,43 @@ public class Preprocessor {
 		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
 			sentence = sentenceList.get(countSentence);
 			
+			//半角
 			while (true){
 				indexParenthesesLeft = sentence.indexOf("(", indexStart + 1);
 				indexParenthesesRight = sentence.indexOf(")", indexStart + 1);
+				if(indexParenthesesLeft == -1){ break; }
 				if(indexParenthesesLeft < indexParenthesesRight){
+					//System.out.println("()発見");
 					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
+					//System.out.println("()の中身：" + textInParentheses);
 					if(!textInParentheses.contains("MEDICINE")){
-						sentence = 
+						sentence = sentence.replace(textInParentheses, "");
+						sentenceList.set(countSentence, sentence);
 					}
+					indexStart = indexParenthesesRight;
 				}
 			}
 			
-//			while (true){
-//				if(sentence.contains("(") || sentence.contains(")")){
-//					indexParenthesesLeft = sentence.indexOf("(", indexStart + 1);
-//					if(indexParenthesesLeft == -1){ break; }
-//					indexParenthesesRight = sentence.indexOf(")", indexParenthesesLeft + 1);
-//				}
-//				break;
-//			}
+			indexStart = -1;
+			indexParenthesesLeft = -1;
+			indexParenthesesRight = -1;
+			
+			//全角
+			while (true){
+				indexParenthesesLeft = sentence.indexOf("（", indexStart + 1);
+				indexParenthesesRight = sentence.indexOf("）", indexStart + 1);
+				if(indexParenthesesLeft == -1){ break; }
+				if(indexParenthesesLeft < indexParenthesesRight){
+					//System.out.println("（）発見");
+					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
+					//System.out.println("（）の中身：" + textInParentheses);
+					if(!textInParentheses.contains("MEDICINE")){
+						sentence = sentence.replace(textInParentheses, "");
+						sentenceList.set(countSentence, sentence);
+					}
+					indexStart = indexParenthesesRight;
+				}
+			}
 			
 		}
 		
