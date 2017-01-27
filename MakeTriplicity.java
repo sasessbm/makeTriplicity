@@ -34,6 +34,10 @@ public class MakeTriplicity {
 			//SentenceListセット
 			snippet.setSentenceList(sentenceList);
 			
+			for(Record record : recordList){
+				
+			}
+			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 			System.out.println("Id:" +record.getId());
 			System.out.println("スニペット:" + snippet.getSnippetText());

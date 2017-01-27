@@ -7,6 +7,7 @@ public class Snippet {
 	private String snippetText;
 	private ArrayList<String> sentenceList;
 	
+	//コンストラクタ
 	public Snippet(String snippetText) {
 		this.snippetText = snippetText;
 	}
