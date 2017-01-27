@@ -15,7 +15,8 @@ public class Preprocessor {
 			if(!snippet.contains("。")){ continue; }
 			String medicineName = recordList.get(countRecord).getMedicineName();
 			ArrayList<String> sentenceList = new ArrayList<String>();
-			sentenceList = replaceMedicineName(getSentence(snippet,medicineName));
+			sentenceList = getSentence(snippet,medicineName);
+			sentenceList = replaceMedicineName(sentenceList);
 			for(String sentence : sentenceList){
 				System.out.println(sentence);
 			}
@@ -42,12 +43,12 @@ public class Preprocessor {
 	public static ArrayList<String> getSentence(String snippet, String medicineName){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
-		int indexStart = 0;
+		int indexStart = -1;
 		int indexPeriod = -1;
 		while (true){
 			indexPeriod = snippet.indexOf("。", indexStart + 1);
 			if(indexPeriod == -1){ break; }
-			sentenceList.add(snippet.substring(indexStart, indexPeriod));
+			sentenceList.add(snippet.substring(indexStart + 1, indexPeriod));
 			indexStart = indexPeriod;
 		}
 		return sentenceList;
@@ -66,7 +67,6 @@ public class Preprocessor {
 				if(sentence.contains(medicineNameInList)){
 					sentence = sentence.replace(medicineNameInList,"MEDICINE");
 					sentenceList.set(countSentence, sentence);
-					//System.out.println(sentence);
 				}
 			}
 		}
@@ -74,6 +74,21 @@ public class Preprocessor {
 		return sentenceList;
 	}
 	
+//	//薬剤名を含まない()削除
+//	public static ArrayList<String> deleteParentheses(ArrayList<String> sentenceList){
+//		
+//		String sentence = "";
+//		int indexStart = 0;
+//		int indexPeriod = -1;
+//		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
+//			sentence = sentenceList.get(countSentence);
+//			if(sentence.contains("(")){
+//				indexPeriod = sentence.indexOf("(", indexStart + 1);
+//			}
+//		}
+//		
+//		return sentenceList; 
+//	}
 	
 
 }
