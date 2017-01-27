@@ -12,13 +12,12 @@ public class MakeTriplicity {
 		//recordList取得(recordの生成)
 		recordList = GetRecordList.getRecordList(recordNum);
 		
+		//リスト単位
 		for(Record record : recordList){
 			
 			Snippet snippet = record.getSnippet();
 			String snippetText = snippet.getSnippetText();
 			String medicineName = record.getMedicineName();
-			
-			ArrayList<String> sentenceList = new ArrayList<String>();
 			
 			//"。"が無いスニペットは対象としない
 			if(!snippetText.contains("。")){ continue; }
@@ -26,16 +25,23 @@ public class MakeTriplicity {
 			//対象薬剤名が無いスニペットは対象としない
 			if(!snippetText.contains(medicineName)){ continue; }
 			
+			ArrayList<Sentence> sentenceList = new ArrayList<Sentence>();
+			
 			//SentenceList取得＆前処理
 			sentenceList = Preprocessor.getSentenceList(snippetText);
-			sentenceList = Preprocessor.replaceMedicineName(sentenceList);
-			sentenceList = Preprocessor.deleteParentheses(sentenceList);
+			
+			//文単位
+			for(Sentence sentence : sentenceList){
+				Preprocessor.replaceMedicineName(sentence);
+				Preprocessor.deleteParentheses(sentence);
+			}
 			
 			//SentenceListセット
 			snippet.setSentenceList(sentenceList);
 			
-			for(Record record : recordList){
-				
+			
+			for(Sentence sentence : sentenceList){
+				//続きはここから
 			}
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
@@ -50,8 +56,8 @@ public class MakeTriplicity {
 			System.out.println("年齢:" +record.getAge());
 			
 			if(snippet.getSentenceList() != null){
-				for(String sentence : record.getSnippet().getSentenceList()){
-					System.out.println(sentence);
+				for(Sentence sentence : sentenceList){
+					System.out.println(sentence.getSentenceText());
 				}
 			}else{
 				System.out.println("null");

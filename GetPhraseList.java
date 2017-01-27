@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class GetPhraseList {
 
-	public static ArrayList<String> getPhraseList(String ) {
+	public static ArrayList<String> getPhraseList() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}

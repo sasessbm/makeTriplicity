@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Snippet {
 	
 	private String snippetText;
-	private ArrayList<String> sentenceList;
+	private ArrayList<Sentence> sentenceList;
 	
 	//コンストラクタ
 	public Snippet(String snippetText) {
@@ -20,11 +20,11 @@ public class Snippet {
 		this.snippetText = snippetText;
 	}
 
-	public ArrayList<String> getSentenceList() {
+	public ArrayList<Sentence> getSentenceList() {
 		return sentenceList;
 	}
 
-	public void setSentenceList(ArrayList<String> sentenceList) {
+	public void setSentenceList(ArrayList<Sentence> sentenceList) {
 		this.sentenceList = sentenceList;
 	}
 	

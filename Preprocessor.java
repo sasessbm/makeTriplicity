@@ -3,92 +3,81 @@ package makeTriplicity;
 import java.util.ArrayList;
 
 public class Preprocessor {
-	
-	//文単位に区切る
-	public static ArrayList<String> getSentenceList(String snippet){
-		
-		ArrayList<String> sentenceList = new ArrayList<String>();
+
+	//文単位に区切る & sentenceオブジェクト生成
+	public static ArrayList<Sentence> getSentenceList(String snippetText){
+
+		ArrayList<Sentence> sentenceList = new ArrayList<Sentence>();
 		int indexStart = -1;
 		int indexPeriod = -1;
 		while (true){
-			indexPeriod = snippet.indexOf("。", indexStart + 1);
+			indexPeriod = snippetText.indexOf("。", indexStart + 1);
 			if(indexPeriod == -1){ break; }
-			sentenceList.add(snippet.substring(indexStart + 1, indexPeriod));
+			Sentence sentence = new Sentence(snippetText.substring(indexStart + 1, indexPeriod));
+			sentenceList.add(sentence);
 			indexStart = indexPeriod;
 		}
 		return sentenceList;
 	}
-	
+
 	//薬剤名を"MEDICINE"に置き換える
-	public static ArrayList<String> replaceMedicineName(ArrayList<String> sentenceList){
-		
+	public static void replaceMedicineName(Sentence sentence){
+
 		ArrayList<String> medicineNameList = new ArrayList<String>();
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
-		String sentence = "";
-		
-		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-			sentence = sentenceList.get(countSentence);
-			for(String medicineNameInList : medicineNameList){
-				if(sentence.contains(medicineNameInList)){
-					sentence = sentence.replace(medicineNameInList,"MEDICINE");
-					sentenceList.set(countSentence, sentence);
-				}
+
+		String sentenceText = sentence.getSentenceText();
+
+		for(String medicineNameInList : medicineNameList){
+			if(sentenceText.contains(medicineNameInList)){
+				sentenceText = sentenceText.replace(medicineNameInList,"MEDICINE");
+				sentence.setSentenceText(sentenceText);
 			}
 		}
-		
-		return sentenceList;
 	}
-	
+
 	//薬剤名を含まない()削除
-	public static ArrayList<String> deleteParentheses(ArrayList<String> sentenceList){
-		
-		String sentence = "";
+	public static void deleteParentheses(Sentence sentence){
+
 		String textInParentheses = "";
 		int indexStart = -1;
 		int indexParenthesesLeft = -1;
 		int indexParenthesesRight = -1;
-		
-		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-			sentence = sentenceList.get(countSentence);
-			
-			//半角
-			while (true){
-				indexParenthesesLeft = sentence.indexOf("(", indexStart + 1);
-				indexParenthesesRight = sentence.indexOf(")", indexStart + 1);
-				if(indexParenthesesLeft == -1){ break; }
-				if(indexParenthesesLeft < indexParenthesesRight){
-					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-					if(!textInParentheses.contains("MEDICINE")){
-						sentence = sentence.replace(textInParentheses, "");
-						sentenceList.set(countSentence, sentence);
-					}
-					indexStart = indexParenthesesRight;
+		String sentenceText = sentence.getSentenceText();
+
+		//半角
+		while (true){
+			indexParenthesesLeft = sentenceText.indexOf("(", indexStart + 1);
+			indexParenthesesRight = sentenceText.indexOf(")", indexStart + 1);
+			if(indexParenthesesLeft == -1){ break; }
+			if(indexParenthesesLeft < indexParenthesesRight){
+				textInParentheses = sentenceText.substring(indexParenthesesLeft, indexParenthesesRight + 1);
+
+				if(!textInParentheses.contains("MEDICINE")){
+					sentenceText = sentenceText.replace(textInParentheses, "");
+					sentence.setSentenceText(sentenceText);
 				}
+				indexStart = indexParenthesesRight;
 			}
-			
-			indexStart = -1;
-			indexParenthesesLeft = -1;
-			indexParenthesesRight = -1;
-			
-			//全角
-			while (true){
-				indexParenthesesLeft = sentence.indexOf("（", indexStart + 1);
-				indexParenthesesRight = sentence.indexOf("）", indexStart + 1);
-				if(indexParenthesesLeft == -1){ break; }
-				if(indexParenthesesLeft < indexParenthesesRight){
-					textInParentheses = sentence.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-					if(!textInParentheses.contains("MEDICINE")){
-						sentence = sentence.replace(textInParentheses, "");
-						sentenceList.set(countSentence, sentence);
-					}
-					indexStart = indexParenthesesRight;
-				}
-			}
-			
 		}
-		
-		return sentenceList; 
+
+		//全角
+		while (true){
+			indexParenthesesLeft = sentenceText.indexOf("（", indexStart + 1);
+			indexParenthesesRight = sentenceText.indexOf("）", indexStart + 1);
+			if(indexParenthesesLeft == -1){ break; }
+			if(indexParenthesesLeft < indexParenthesesRight){
+				textInParentheses = sentenceText.substring(indexParenthesesLeft, indexParenthesesRight + 1);
+
+				if(!textInParentheses.contains("MEDICINE")){
+					sentenceText = sentenceText.replace(textInParentheses, "");
+					sentence.setSentenceText(sentenceText);
+				}
+				indexStart = indexParenthesesRight;
+			}
+		}
+
 	}
-	
+
 
 }
