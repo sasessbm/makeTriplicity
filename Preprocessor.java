@@ -5,11 +5,6 @@ import java.util.ArrayList;
 public class Preprocessor {
 
 	public static void main(String[] args) throws Exception {
-//		String snippet = "...なくてぽよんとした感じです。 抜けないんです。 味覚障害は、１－２日ははっきりと、２－３日はちょっとねの不具合を感じます。 "
-//				+ "なので、タキソール後の食欲はやはりおちます。 病気して嗜好が変ったのがフルーツです。季節を感じたいと強く求めるようになりました。 上は宮崎のマンゴー"
-//				+ "......利用してしまいます。 今は暑いので、特に、すぐ乗りますね。 当初、よく病院ー駅ー会社を 徒歩＋電車で移動していたと信じられません。 "
-//				+ "タキソールは30％OFFで 元気は30%Plusで 記事URL コメント ペタ &amp;laquo; 夕張メロンの思い出 | 記事一覧 | カイシャのオモイヤ･･･ "
-//				+ "&amp;raquo; コメント ...";
 		
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		int recordNum = 10;
@@ -20,32 +15,12 @@ public class Preprocessor {
 			if(!snippet.contains("。")){ continue; }
 			String medicineName = recordList.get(countRecord).getMedicineName();
 			ArrayList<String> sentenceList = new ArrayList<String>();
-			sentenceList = getSentence(snippet,medicineName);
-			ArrayList<String> medicineNameList = new ArrayList<String>();
-			medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
-			//String sentence = "";
-			
+			sentenceList = replaceMedicineName(getSentence(snippet,medicineName));
 			for(String sentence : sentenceList){
-				for(String medicineNameInList : medicineNameList){
-					if(sentence.contains(medicineNameInList)){
-						sentence = sentence.replace(medicineNameInList,"MEDICINE");
-					}
-				}
 				System.out.println(sentence);
 			}
 			
-//			for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-//				
-//				sentence = sentenceList.get(countSentence);
-//				for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
-//					
-//				}
-//				if(sentence.)
-//				
-//				System.out.println(sentenceList.get(countSentence));
-//			}
 			
-			//snippet = snippet.replace(medicineName,"MEDICINE");
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 //			System.out.println("Id:" +recordList.get(i).getId());
@@ -63,7 +38,7 @@ public class Preprocessor {
 
 	}
 	
-	//　文単位に区切る
+	//文単位に区切る
 	public static ArrayList<String> getSentence(String snippet, String medicineName){
 		
 		ArrayList<String> sentenceList = new ArrayList<String>();
@@ -77,5 +52,28 @@ public class Preprocessor {
 		}
 		return sentenceList;
 	}
+	
+	//薬剤名を"MEDICINE"に置き換える
+	public static ArrayList<String> replaceMedicineName(ArrayList<String> sentenceList){
+		
+		ArrayList<String> medicineNameList = new ArrayList<String>();
+		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+		String sentence = "";
+		
+		for(int countSentence = 0; countSentence < sentenceList.size(); countSentence++){
+			sentence = sentenceList.get(countSentence);
+			for(String medicineNameInList : medicineNameList){
+				if(sentence.contains(medicineNameInList)){
+					sentence = sentence.replace(medicineNameInList,"MEDICINE");
+					sentenceList.set(countSentence, sentence);
+					//System.out.println(sentence);
+				}
+			}
+		}
+		
+		return sentenceList;
+	}
+	
+	
 
 }
