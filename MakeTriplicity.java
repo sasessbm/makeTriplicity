@@ -2,6 +2,8 @@ package makeTriplicity;
 
 import java.util.ArrayList;
 
+import test.CaboChaTest3;
+
 public class MakeTriplicity {
 
 	public static void main(String[] args) throws Exception {
@@ -12,12 +14,14 @@ public class MakeTriplicity {
 		//recordList取得(recordの生成)
 		recordList = GetRecordList.getRecordList(recordNum);
 		
-		//リスト単位
+		//レコード単位
 		for(Record record : recordList){
 			
 			Snippet snippet = record.getSnippet();
 			String snippetText = snippet.getSnippetText();
 			String medicineName = record.getMedicineName();
+			
+			ArrayList<String> sentenceTextList = new ArrayList<String>();
 			
 			//"。"が無いスニペットは対象としない
 			if(!snippetText.contains("。")){ continue; }
@@ -25,23 +29,22 @@ public class MakeTriplicity {
 			//対象薬剤名が無いスニペットは対象としない
 			if(!snippetText.contains(medicineName)){ continue; }
 			
-			ArrayList<Sentence> sentenceList = new ArrayList<Sentence>();
-			
-			//SentenceList取得＆前処理
-			sentenceList = Preprocessor.getSentenceList(snippetText);
+			//SentenceList取得
+			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
 			
 			//文単位
-			for(Sentence sentence : sentenceList){
-				Preprocessor.replaceMedicineName(sentence);
-				Preprocessor.deleteParentheses(sentence);
-			}
-			
-			//SentenceListセット
-			snippet.setSentenceList(sentenceList);
-			
-			
-			for(Sentence sentence : sentenceList){
-				//続きはここから
+			for(String sentenceText : sentenceTextList){
+				
+				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
+				
+				//前処理
+				sentenceText = Preprocessor.replaceMedicineName(sentenceText);
+				sentenceText = Preprocessor.deleteParentheses(sentenceText);
+				
+				ArrayList<String> xmlList = new ArrayList<String>();
+				xmlList = GetPhraseList.GetSyntaxAnalysisResultXml(sentenceText);
+				
+				
 			}
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
@@ -56,7 +59,7 @@ public class MakeTriplicity {
 			System.out.println("年齢:" +record.getAge());
 			
 			if(snippet.getSentenceList() != null){
-				for(Sentence sentence : sentenceList){
+				for(Sentence sentence : snippet.getSentenceList()){
 					System.out.println(sentence.getSentenceText());
 				}
 			}else{

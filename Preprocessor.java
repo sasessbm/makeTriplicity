@@ -5,45 +5,43 @@ import java.util.ArrayList;
 public class Preprocessor {
 
 	//文単位に区切る & sentenceオブジェクト生成
-	public static ArrayList<Sentence> getSentenceList(String snippetText){
-
-		ArrayList<Sentence> sentenceList = new ArrayList<Sentence>();
+	public static ArrayList<String> getSentenceTextList(String snippetText){
+		
+		ArrayList<String> sentenceTextList = new ArrayList<String>();
 		int indexStart = -1;
 		int indexPeriod = -1;
 		while (true){
 			indexPeriod = snippetText.indexOf("。", indexStart + 1);
 			if(indexPeriod == -1){ break; }
-			Sentence sentence = new Sentence(snippetText.substring(indexStart + 1, indexPeriod));
-			sentenceList.add(sentence);
+			//Sentence sentence = new Sentence(snippetText.substring(indexStart + 1, indexPeriod));
+			sentenceTextList.add(snippetText.substring(indexStart + 1, indexPeriod));
 			indexStart = indexPeriod;
 		}
-		return sentenceList;
+		
+		return sentenceTextList;
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static void replaceMedicineName(Sentence sentence){
+	public static String replaceMedicineName(String sentenceText){
 
 		ArrayList<String> medicineNameList = new ArrayList<String>();
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
 
-		String sentenceText = sentence.getSentenceText();
-
 		for(String medicineNameInList : medicineNameList){
 			if(sentenceText.contains(medicineNameInList)){
 				sentenceText = sentenceText.replace(medicineNameInList,"MEDICINE");
-				sentence.setSentenceText(sentenceText);
 			}
 		}
+		return sentenceText;
 	}
 
 	//薬剤名を含まない()削除
-	public static void deleteParentheses(Sentence sentence){
+	public static String deleteParentheses(String sentenceText){
 
 		String textInParentheses = "";
 		int indexStart = -1;
 		int indexParenthesesLeft = -1;
 		int indexParenthesesRight = -1;
-		String sentenceText = sentence.getSentenceText();
 
 		//半角
 		while (true){
@@ -55,7 +53,6 @@ public class Preprocessor {
 
 				if(!textInParentheses.contains("MEDICINE")){
 					sentenceText = sentenceText.replace(textInParentheses, "");
-					sentence.setSentenceText(sentenceText);
 				}
 				indexStart = indexParenthesesRight;
 			}
@@ -71,11 +68,12 @@ public class Preprocessor {
 
 				if(!textInParentheses.contains("MEDICINE")){
 					sentenceText = sentenceText.replace(textInParentheses, "");
-					sentence.setSentenceText(sentenceText);
 				}
 				indexStart = indexParenthesesRight;
 			}
 		}
+		
+		return sentenceText;
 
 	}
 

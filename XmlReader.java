@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,35 +16,34 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class XmlReader {
 	
-	public void domRead(String file) throws SAXException, IOException, ParserConfigurationException {
-		
+	public static void domRead(ArrayList<String> xmlList) throws SAXException, IOException, ParserConfigurationException {
+
 		int rec = 0;
-		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(file))));
-		while(br.ready()) {
-			String line = br.readLine();
-			// １行目ならBOM除去メソッドを呼び出す
+		String xmlTextAll = "";
+		for(String xmlText : xmlList){
 			if (rec == 0) {
-				line = excludeBOMString(line);
+				xmlText = excludeBOMString(xmlText);
 			}
 			
+			xmlTextAll += xmlText + "\r";
 			rec++;
 		}
-		
+		System.out.println(xmlTextAll);
+
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-		Document document = documentBuilder.parse(file);
+		InputSource inputSource = new InputSource(new StringReader(xmlTextAll));
+		Document document = documentBuilder.parse(inputSource);
 
 		Element root = document.getDocumentElement();
 
 		//ルート要素のノード名を取得する
 		System.out.println("ノード名：" +root.getNodeName());
-
-		//ルート要素の属性を取得する
-		System.out.println("ルート要素の属性：" + root.getAttribute("name"));
 
 		//ルート要素の子ノードを取得する
 		NodeList rootChildren = root.getChildNodes();
@@ -55,20 +56,21 @@ public class XmlReader {
 
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element)node;
-				if (element.getNodeName().equals("person")) {
-					System.out.println("名前：" + element.getAttribute("name"));
-					NodeList personChildren = node.getChildNodes();
-
-					for (int j=0; j < personChildren.getLength(); j++) {
-						Node personNode = personChildren.item(j);
-						if (personNode.getNodeType() == Node.ELEMENT_NODE) {
-
-							if (personNode.getNodeName().equals("age")) {
-								System.out.println("年齢：" + personNode.getTextContent());
-							} else if (personNode.getNodeName().equals("interest")) {
-								System.out.println("趣味:" + personNode.getTextContent());
+				if (element.getNodeName().equals("chunk")) {
+					System.out.println("chunkId：" + element.getAttribute("id"));
+					System.out.println("link：" + element.getAttribute("link"));
+					NodeList sentenceChildren = node.getChildNodes();
+					
+					for (int j=0; j < sentenceChildren.getLength(); j++) {
+						Node sentenceNode = sentenceChildren.item(j);
+						if (sentenceNode.getNodeType() == Node.ELEMENT_NODE) {
+							Element element2 = (Element)sentenceNode;
+							if (element2.getNodeName().equals("tok")) {
+								System.out.println("tokId：" + element2.getAttribute("id"));
+								System.out.println("形態素：" + element2.getTextContent());
+								System.out.println("feature：" + element2.getAttribute("feature"));
+								
 							}
-
 						}
 					}
 					System.out.println("------------------");
