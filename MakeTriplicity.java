@@ -42,21 +42,27 @@ public class MakeTriplicity {
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				
 				ArrayList<String> xmlList = new ArrayList<String>();
-				xmlList = GetPhraseList.GetSyntaxAnalysisResultXml(sentenceText);
 				
+				//構文解析結果をXml形式で取得
+				xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
+				
+				phraseList = XmlReader.GetPhraseList(xmlList);
+				for(Phrase phrase : phraseList){
+					System.out.println(phrase.getPhraseText() + phrase.getDependencyIndex());
+				}
 				
 			}
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-			System.out.println("Id:" +record.getId());
-			System.out.println("スニペット:" + snippet.getSnippetText());
-			System.out.println("薬剤名:" +record.getMedicineName());
-			System.out.println("病名:" +record.getDiseaseName());
-			System.out.println("性別:" +record.getSex());
-			System.out.println("ブログタイトル:" +record.getTitle_blog());
-			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
-			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
-			System.out.println("年齢:" +record.getAge());
+//			System.out.println("Id:" +record.getId());
+//			System.out.println("スニペット:" + snippet.getSnippetText());
+//			System.out.println("薬剤名:" +record.getMedicineName());
+//			System.out.println("病名:" +record.getDiseaseName());
+//			System.out.println("性別:" +record.getSex());
+//			System.out.println("ブログタイトル:" +record.getTitle_blog());
+//			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
+//			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
+//			System.out.println("年齢:" +record.getAge());
 			
 			if(snippet.getSentenceList() != null){
 				for(Sentence sentence : snippet.getSentenceList()){

@@ -14,24 +14,24 @@ import org.xml.sax.SAXException;
 
 import test.CaboChaTest3;
 
-public class GetPhraseList {
+public class SyntaxAnalys {
 
-	public static ArrayList<Phrase> getPhraseList(Sentence sentence) throws SAXException, IOException, ParserConfigurationException {
-
-		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
-		
-		String sentenceText = sentence.getSentenceText();
-		ArrayList<String> xmlList = new ArrayList<String>();
-		xmlList = CaboChaTest3.Run(sentenceText);
-		
-		XmlReader.domRead(xmlList);
-		
-		return phraseList;
-
-	}
+//	public static ArrayList<Phrase> getPhraseList(Sentence sentence) throws SAXException, IOException, ParserConfigurationException {
+//
+//		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
+//		
+//		String sentenceText = sentence.getSentenceText();
+//		ArrayList<String> xmlList = new ArrayList<String>();
+//		xmlList = CaboChaTest3.Run(sentenceText);
+//		
+//		XmlReader.domRead(xmlList);
+//		
+//		return phraseList;
+//
+//	}
 
 	//String型で文字列を受け取り、それを係り受け解析する関数
-	public static ArrayList<String> GetSyntaxAnalysisResultXml(String text){
+	public static ArrayList<String> GetSyntaxAnalysResultXml(String text){
 
 		ArrayList<String> xmlList = new ArrayList<String>();
 
