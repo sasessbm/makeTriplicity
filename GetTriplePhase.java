@@ -1,26 +1,21 @@
 package makeTriplicity;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
-public class GetTriplePhaseList {
+public class GetTriplePhase {
 	
-	private static ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
-	private static ArrayList<String> keywordList = new ArrayList<String>();
+	private static  ArrayList<Phrase> phraseList;
+	private static ArrayList<String> keywordList = 
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword.txt");
+	private static TriplePhrase triplePhrase;
+	//private static ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
 
-	public static void setPhraseList(ArrayList<Phrase> phraseList) {
-		GetTriplePhaseList.phraseList = phraseList;
-	}
-
-	public static void setKeywordList(ArrayList<String> keywordList) {
-		GetTriplePhaseList.keywordList = keywordList;
-	}
-
-
-
-	public static ArrayList<TriplePhrase> getTriplePhraseList() {
+	public static TriplePhrase getTriplePhrase(ArrayList<Phrase> phraseList) {
 		
-		ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
-		
+		GetTriplePhase.phraseList = new ArrayList<Phrase>();
+		triplePhrase = new TriplePhrase("","","");
+		GetTriplePhase.phraseList = phraseList;
 		//String phraseText = "";
 		//int dependencyIndex = -10;
 		//boolean targetMedicineFlag = false;
@@ -55,7 +50,7 @@ public class GetTriplePhaseList {
 //
 //		}
 		
-		return triplePhraseList;
+		return triplePhrase;
 
 	}
 	
@@ -71,16 +66,20 @@ public class GetTriplePhaseList {
 		return isExist;
 	}
 	
+	//「手がかり語」要素存在文節探索
 	public static void serchKeywordPhrase(int dependencyIndex){
 		
 		for(Phrase phrase : phraseList){
 			if(phrase.getId() == dependencyIndex){
 				if(isExistKeyword(phrase.getPhraseText())){
+					
+					//一番最後の文節が、格助詞または接続助詞か確認
 					String partOfSpeechDetails = phrase.getMorphemeList()
 												.get(phrase.getMorphemeList().size()-1).getPartOfSpeechDetails();
 					if(partOfSpeechDetails.contains("格助詞") || partOfSpeechDetails.contains("接続助詞")){
 						phrase.setPhraseType("Keyword");
 						serchEffectPhrase(phrase.getDependencyIndex());
+						break;
 					}
 				}
 			}
@@ -88,17 +87,37 @@ public class GetTriplePhaseList {
 		
 	}
 	
+	//「効果」要素存在文節探索
 	public static void serchEffectPhrase(int dependencyIndex){
 		
 		for(Phrase phrase : phraseList){
 			if(phrase.getId() == dependencyIndex){
-				phrase.setPhraseType("Effect");
+				triplePhrase.setEffectPhrase(phrase.getPhraseText());
+				//phrase.setPhraseType("Effect");
+				serchTargetPhrase(phrase.getId());
+				break;
 			}
 		}
 		
 	}
 	
-	public static void serchTargetPhrase(int dependencyIndex){
+	//「対象」要素存在文節探索
+	public static void serchTargetPhrase(int id){
+		
+		//逆から探索
+		for(int i=1; i<=phraseList.size(); i++){
+			if(phraseList.get(phraseList.size()-i).getDependencyIndex() == id){
+				String lastMorphemeText = phraseList.get(phraseList.size()-i).getMorphemeList()
+										  .get(phraseList.get(phraseList.size()-i).getMorphemeList().size()-1)
+										  .getMorphemeText();
+				
+				if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") || lastMorphemeText.equals("を")){
+					triplePhrase.setTargetPhrase(phraseList.get(phraseList.size()-i).getPhraseText());
+					//phraseList.get(phraseList.size()-i).setPhraseType("Target");
+					break;
+				}
+			}
+		}
 		
 	}
 

@@ -44,6 +44,8 @@ public class MakeTriplicity {
 			System.out.println("\r\n以下、1文単位");
 			int indexSentence = 0;
 			
+			ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
+			
 			//文単位
 			for(String sentenceText : sentenceTextList){
 				System.out.println("------------------------------------------------------------------------------------");
@@ -70,7 +72,7 @@ public class MakeTriplicity {
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
-				int indexPhrase = 0;
+				int indexPhrase = -1;
 				System.out.println("\r\n以下、文節単位");
 				
 				//文節単位
@@ -88,6 +90,13 @@ public class MakeTriplicity {
 					}
 				}
 				
+				TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
+				triplePhrase.setMedicineName(medicineName);
+				System.out.println("薬剤名:" + triplePhrase.getMedicineName());
+				System.out.println("対象要素存在文節:" + triplePhrase.getTargetPhrase());
+				System.out.println("効果要素存在文節:" + triplePhrase.getEffectPhrase());
+				
+				triplePhraseList.add(triplePhrase);
 				
 			}
 			
