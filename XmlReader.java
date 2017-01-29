@@ -57,11 +57,13 @@ public class XmlReader {
 				
 				Element element = (Element)node;
 				if (element.getNodeName().equals("chunk")) {
+					int phraseId = -1;
 					int dependencyIndex = -10;
 					String phraseText = "";
 					//System.out.println("chunkId：" + element.getAttribute("id"));
 					//System.out.println("link：" + element.getAttribute("link"));
 					
+					phraseId = Integer.parseInt(element.getAttribute("id"));
 					dependencyIndex = Integer.parseInt(element.getAttribute("link"));
 					
 					NodeList sentenceChildren = node.getChildNodes();
@@ -77,10 +79,13 @@ public class XmlReader {
 							Element element2 = (Element)sentenceNode;
 							if (element2.getNodeName().equals("tok")) {
 								
+								int mophemeId = -1;
+								
 								morphemeText = element2.getTextContent();
 								feature = element2.getAttribute("feature");
+								mophemeId =  Integer.parseInt(element2.getAttribute("id"));
 								
-								Morpheme morpheme = new Morpheme(morphemeText, feature);
+								Morpheme morpheme = new Morpheme(mophemeId, morphemeText, feature);
 								morphemeList.add(morpheme);
 								
 //								System.out.println("tokId：" + element2.getAttribute("id"));
@@ -95,7 +100,7 @@ public class XmlReader {
 						phraseText += morpheme.getMorphemeText();
 					}
 					
-					Phrase phrase = new Phrase(phraseText,dependencyIndex);
+					Phrase phrase = new Phrase(phraseId, phraseText, dependencyIndex);
 					phrase.setMorphemeList(morphemeList);
 					phraseList.add(phrase);
 				}

@@ -58,7 +58,7 @@ public class MakeTriplicity {
 				}
 				
 				//前処理
-				sentenceText = Preprocessor.replaceMedicineName(sentenceText);
+				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				
 				System.out.println("\r\n文" + indexSentence + ":" + sentenceText);

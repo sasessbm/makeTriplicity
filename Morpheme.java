@@ -2,14 +2,29 @@ package makeTriplicity;
 
 public class Morpheme {
 	
+	private int id;
 	private String morphemeText;
+	private String feature;
 	private String partOfSpeech;
+	private String partOfSpeechDetails;
 	
 	
 	//コンストラクタ
-	public Morpheme(String morphemeText, String partOfSpeech) {
+	public Morpheme(int id, String morphemeText, String feature) {
+		this.id = id;
 		this.morphemeText = morphemeText;
-		this.partOfSpeech = partOfSpeech;
+		this.feature = feature;
+		String[] featureArray = feature.split(",");
+		this.partOfSpeech = featureArray[0];
+		this.partOfSpeechDetails = featureArray[1];
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getMorphemeText(){
@@ -20,12 +35,34 @@ public class Morpheme {
 		this.morphemeText = morphemeText;
 	}
 	
-	public String getPartOfSpeech(){
-		return partOfSpeech;
+	public String getFeature(){
+		return feature;
 	}
 	
-	public void setPartOfSpeech(String partOfSpeech){
+	public void setFeature(String feature){
+		this.feature = feature;
+	}
+
+
+	public String getPartOfSpeech() {
+		return partOfSpeech;
+	}
+
+
+	public void setPartOfSpeech(String partOfSpeech) {
 		this.partOfSpeech = partOfSpeech;
 	}
+
+
+	public String getPartOfSpeechDetails() {
+		return partOfSpeechDetails;
+	}
+
+
+	public void setPartOfSpeechDetails(String partOfSpeechDetails) {
+		this.partOfSpeechDetails = partOfSpeechDetails;
+	}
+	
+	
 	
 }

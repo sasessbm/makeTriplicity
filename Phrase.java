@@ -4,17 +4,27 @@ import java.util.ArrayList;
 
 public class Phrase {
 	
+	private int id;
 	private String phraseText;
 	private int dependencyIndex;
 	private ArrayList<Morpheme> morphemeList;
+	private String phraseType;
 	
-	
+
 	//コンストラクタ
-	public Phrase(String phraseText, int dependencyIndex) {
+	public Phrase(int id, String phraseText, int dependencyIndex) {
+		this.id = id;
 		this.phraseText = phraseText;
 		this.dependencyIndex = dependencyIndex;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getPhraseText() {
 		return phraseText;
@@ -39,6 +49,14 @@ public class Phrase {
 	public void setMorphemeList(ArrayList<Morpheme> morphemeList) {
 		this.morphemeList = morphemeList;
 	} 
+	
+	public String getPhraseType() {
+		return phraseType;
+	}
+
+	public void setPhraseType(String phraseType) {
+		this.phraseType = phraseType;
+	}
 	
 
 }

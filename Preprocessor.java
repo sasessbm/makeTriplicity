@@ -22,14 +22,18 @@ public class Preprocessor {
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static String replaceMedicineName(String sentenceText){
+	public static String replaceMedicineName(String sentenceText, String targetMediceneName){
 
 		ArrayList<String> medicineNameList = new ArrayList<String>();
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+		
+		if(sentenceText.contains(targetMediceneName)){
+			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
+		}
 
 		for(String medicineNameInList : medicineNameList){
 			if(sentenceText.contains(medicineNameInList)){
-				sentenceText = sentenceText.replace(medicineNameInList,"MEDICINE");
+				sentenceText = sentenceText.replace(medicineNameInList,"OTHERMEDICINE");
 			}
 		}
 		return sentenceText;

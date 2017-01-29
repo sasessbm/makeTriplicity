@@ -25,15 +25,15 @@ public class Test {
 //		}
 //		System.out.println(isExsist);
 		
-		String sentence = "トリプルネガティブ乳がん財団（TNBCF）の掲示板をチェックしたら、"
-				+ "あの有名な経済誌Forbesにbevacizumab(アバスチンAvastin)関する記事があった";
-		
-		sentence = Preprocessor.replaceMedicineName(sentence);
-		System.out.println("削除前:" + sentence);
-		
-		sentence = Preprocessor.deleteParentheses(sentence);
-		
-		System.out.println("削除後:" + sentence);
+//		String sentence = "トリプルネガティブ乳がん財団（TNBCF）の掲示板をチェックしたら、"
+//				+ "あの有名な経済誌Forbesにbevacizumab(アバスチンAvastin)関する記事があった";
+//		
+//		sentence = Preprocessor.replaceMedicineName(sentence);
+//		System.out.println("削除前:" + sentence);
+//		
+//		sentence = Preprocessor.deleteParentheses(sentence);
+//		
+//		System.out.println("削除後:" + sentence);
 		
 	}
 
