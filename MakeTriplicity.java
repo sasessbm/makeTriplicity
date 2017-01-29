@@ -11,7 +11,7 @@ public class MakeTriplicity {
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		int recordNum = 10;
 		
-		//recordList取得(recordの生成)
+		//recordList取得　(recordの生成)
 		recordList = GetRecordList.getRecordList(recordNum);
 		
 		//レコード単位
@@ -21,8 +21,6 @@ public class MakeTriplicity {
 			String snippetText = snippet.getSnippetText();
 			String medicineName = record.getMedicineName();
 			
-			ArrayList<String> sentenceTextList = new ArrayList<String>();
-			
 			//"。"が無いスニペットは対象としない
 			if(!snippetText.contains("。")){ continue; }
 			
@@ -30,8 +28,8 @@ public class MakeTriplicity {
 			if(!snippetText.contains(medicineName)){ continue; }
 			
 			//SentenceList取得
+			ArrayList<String> sentenceTextList = new ArrayList<String>();
 			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
-			
 			
 			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 			System.out.println("Id:" +record.getId());
@@ -46,7 +44,6 @@ public class MakeTriplicity {
 			System.out.println("\r\n以下、1文単位");
 			int indexSentence = 0;
 			
-			
 			//文単位
 			for(String sentenceText : sentenceTextList){
 				System.out.println("------------------------------------------------------------------------------------");
@@ -60,44 +57,37 @@ public class MakeTriplicity {
 					System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
 				}
 				
-//				if(!(sentenceText.equals(null) && sentenceText.equals(""))){
-//					System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
-//				}else{
-//					System.out.println("\r\n文" + indexSentence + ":null");
-//				}
-				
-				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
-				
 				//前処理
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				
-				ArrayList<String> xmlList = new ArrayList<String>();
-				
 				//構文解析結果をXml形式で取得
+				ArrayList<String> xmlList = new ArrayList<String>();
 				xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
 				
+				//phraseList取得　(phrase,morphemeの生成)
+				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
 				int indexPhrase = 0;
 				System.out.println("\r\n以下、文節単位");
 				
+				//文節単位
 				for(Phrase phrase : phraseList){
 					System.out.println("---------------------------------------------------");
 					indexPhrase ++;
 					System.out.println("\r\n文節" + indexPhrase);
 					System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
 					System.out.println("\r\n以下、形態素単位");
+					
+					//形態素単位
 					for(Morpheme morpheme : phrase.getMorphemeList()){
 						System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
 						
 					}
-					//System.out.println("---------------------------------------------------");
 				}
 				
 				
 			}
-			
-			
 			
 			
 		}

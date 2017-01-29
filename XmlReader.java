@@ -24,8 +24,6 @@ public class XmlReader {
 	public static ArrayList<Phrase> GetPhraseList (ArrayList<String> xmlList) throws SAXException, IOException, ParserConfigurationException {
 		
 		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
-		
-		
 		int rec = 0;
 		String xmlTextAll = "";
 		for(String xmlText : xmlList){
@@ -36,8 +34,6 @@ public class XmlReader {
 			xmlTextAll += xmlText + "\r\n";
 			rec++;
 		}
-		//System.out.println(xmlTextAll);
-
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder = factory.newDocumentBuilder();
 		InputSource inputSource = new InputSource(new StringReader(xmlTextAll));
@@ -59,9 +55,6 @@ public class XmlReader {
 
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				
-				
-				
-				
 				Element element = (Element)node;
 				if (element.getNodeName().equals("chunk")) {
 					int dependencyIndex = -10;
@@ -77,12 +70,8 @@ public class XmlReader {
 					
 					for (int j=0; j < sentenceChildren.getLength(); j++) {
 						
-						
-						
 						String morphemeText = "";
 						String feature = "";
-						
-						
 						Node sentenceNode = sentenceChildren.item(j);
 						if (sentenceNode.getNodeType() == Node.ELEMENT_NODE) {
 							Element element2 = (Element)sentenceNode;
@@ -109,17 +98,12 @@ public class XmlReader {
 					Phrase phrase = new Phrase(phraseText,dependencyIndex);
 					phrase.setMorphemeList(morphemeList);
 					phraseList.add(phrase);
-					
-					//System.out.println("------------------");
 				}
 			}
 
 		}
 		
-		
-		
 		return phraseList;
-
 	}
 	
 	private static String excludeBOMString(String original_str) {
