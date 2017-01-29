@@ -57,6 +57,11 @@ public class Preprocessor {
 				indexStart = indexParenthesesRight;
 			}
 		}
+		
+		textInParentheses = "";
+		indexStart = -1;
+		indexParenthesesLeft = -1;
+		indexParenthesesRight = -1;
 
 		//全角
 		while (true){

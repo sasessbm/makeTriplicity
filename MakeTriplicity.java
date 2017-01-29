@@ -61,6 +61,8 @@ public class MakeTriplicity {
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				
+				System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
+				
 				//構文解析結果をXml形式で取得
 				ArrayList<String> xmlList = new ArrayList<String>();
 				xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);

@@ -6,7 +6,14 @@ public class SearchElementPhrase {
 
 	public static void main(String[] args) {
 		
-		ArrayList<String> phraseList = new ArrayList<String>(); 
+		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
+		String phraseText = "";
+		
+		
+		for(Phrase phrase : phraseList){
+			phraseText = phrase.getPhraseText();
+			//if()
+		}
 
 	}
 
