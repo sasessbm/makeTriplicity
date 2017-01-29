@@ -32,8 +32,39 @@ public class MakeTriplicity {
 			//SentenceList取得
 			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
 			
+			
+			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
+			System.out.println("Id:" +record.getId());
+			System.out.println("スニペット:" + snippet.getSnippetText());
+			System.out.println("薬剤名:" +record.getMedicineName());
+			System.out.println("病名:" +record.getDiseaseName());
+			System.out.println("性別:" +record.getSex());
+			System.out.println("ブログタイトル:" +record.getTitle_blog());
+			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
+			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
+			System.out.println("年齢:" +record.getAge());
+			System.out.println("\r\n以下、1文単位");
+			int indexSentence = 0;
+			
+			
 			//文単位
 			for(String sentenceText : sentenceTextList){
+				System.out.println("------------------------------------------------------------------------------------");
+				indexSentence++;
+				
+				//空白の文は対象としない
+				if(sentenceText.equals(null) || sentenceText.equals("")){
+					System.out.println("\r\n文" + indexSentence + ":null");
+					continue;
+				}else{
+					System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
+				}
+				
+//				if(!(sentenceText.equals(null) && sentenceText.equals(""))){
+//					System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
+//				}else{
+//					System.out.println("\r\n文" + indexSentence + ":null");
+//				}
 				
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				
@@ -47,30 +78,26 @@ public class MakeTriplicity {
 				xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
 				
 				phraseList = XmlReader.GetPhraseList(xmlList);
+				int indexPhrase = 0;
+				System.out.println("\r\n以下、文節単位");
+				
 				for(Phrase phrase : phraseList){
-					System.out.println(phrase.getPhraseText() + phrase.getDependencyIndex());
+					System.out.println("---------------------------------------------------");
+					indexPhrase ++;
+					System.out.println("\r\n文節" + indexPhrase);
+					System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
+					System.out.println("\r\n以下、形態素単位");
+					for(Morpheme morpheme : phrase.getMorphemeList()){
+						System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
+						
+					}
+					//System.out.println("---------------------------------------------------");
 				}
+				
 				
 			}
 			
-			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
-//			System.out.println("Id:" +record.getId());
-//			System.out.println("スニペット:" + snippet.getSnippetText());
-//			System.out.println("薬剤名:" +record.getMedicineName());
-//			System.out.println("病名:" +record.getDiseaseName());
-//			System.out.println("性別:" +record.getSex());
-//			System.out.println("ブログタイトル:" +record.getTitle_blog());
-//			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
-//			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
-//			System.out.println("年齢:" +record.getAge());
 			
-			if(snippet.getSentenceList() != null){
-				for(Sentence sentence : snippet.getSentenceList()){
-					System.out.println(sentence.getSentenceText());
-				}
-			}else{
-				System.out.println("null");
-			}
 			
 			
 		}

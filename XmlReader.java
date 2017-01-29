@@ -33,7 +33,7 @@ public class XmlReader {
 				xmlText = excludeBOMString(xmlText);
 			}
 			
-			xmlTextAll += xmlText + "\r";
+			xmlTextAll += xmlText + "\r\n";
 			rec++;
 		}
 		//System.out.println(xmlTextAll);
@@ -107,9 +107,10 @@ public class XmlReader {
 					}
 					
 					Phrase phrase = new Phrase(phraseText,dependencyIndex);
+					phrase.setMorphemeList(morphemeList);
 					phraseList.add(phrase);
 					
-					System.out.println("------------------");
+					//System.out.println("------------------");
 				}
 			}
 
