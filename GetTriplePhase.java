@@ -1,6 +1,7 @@
 package makeTriplicity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ListIterator;
 
 public class GetTriplePhase {
@@ -13,7 +14,7 @@ public class GetTriplePhase {
 	public static TriplePhrase getTriplePhrase(ArrayList<Phrase> phraseList) {
 		
 		GetTriplePhase.phraseList = new ArrayList<Phrase>();
-		triplePhrase = new TriplePhrase("","","");
+		triplePhrase = new TriplePhrase();
 		GetTriplePhase.phraseList = phraseList;
 		
 		for(Phrase phrase : phraseList){
@@ -85,9 +86,11 @@ public class GetTriplePhase {
 	//「効果」要素存在文節判定
 	public static void judgeEffectPhrase(int dependencyIndex){
 		
+		ArrayList<Phrase> effectPhraseList = new ArrayList<Phrase>();
 		for(Phrase phrase : phraseList){
 			if(phrase.getId() == dependencyIndex){
-				triplePhrase.setEffectPhrase(phrase.getPhraseText());
+				effectPhraseList.add(phrase);
+				triplePhrase.setEffectPhraseList(effectPhraseList);
 				//phrase.setPhraseType("Effect");
 				judgeTargetPhrase(phrase.getId());
 				break;
@@ -99,8 +102,9 @@ public class GetTriplePhase {
 	//「対象」要素存在文節判定
 	public static void judgeTargetPhrase(int id){
 		
-		String targetPhraseText = "";
+		//String targetPhraseText = "";
 		boolean findPhrase = false;
+		ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 		
 		//逆から探索
 		for(int i=1; i<=phraseList.size(); i++){
@@ -112,15 +116,18 @@ public class GetTriplePhase {
 				
 				if(findPhrase){
 					if(lastMorphemeText.equals("の")){
-						targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText() + targetPhraseText;
+						targetPhraseList.add(phraseList.get(phraseList.size()-i));
+						//targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText() + targetPhraseText;
 					}else{
-						triplePhrase.setTargetPhrase(targetPhraseText);
+						Collections.reverse(targetPhraseList);
+						triplePhrase.setTargetPhraseList(targetPhraseList);
 						break;
 					}
 				}else{
 					if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") || lastMorphemeText.equals("を")){
 						findPhrase = true;
-						targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText();
+						targetPhraseList.add(phraseList.get(phraseList.size()-i));
+						//targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText();
 						
 						//triplePhrase.setTargetPhrase(phraseList.get(phraseList.size()-i).getPhraseText());
 						//phraseList.get(phraseList.size()-i).setPhraseType("Target");

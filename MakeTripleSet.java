@@ -9,8 +9,8 @@ public class MakeTripleSet {
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
-		int startRecordNum = 1;
-		int endRecordNum = 50;
+		int startRecordNum = 62127;
+		int endRecordNum = 62127;
 
 		//recordList取得　(recordの生成)
 		recordList = GetRecordList.getRecordList(startRecordNum, endRecordNum);
@@ -94,16 +94,34 @@ public class MakeTripleSet {
 				//				}
 
 				TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
-				if(triplePhrase.getEffectPhrase().equals("") && triplePhrase.getTargetPhrase().equals("")){
+				
+				if(triplePhrase.getTargetPhraseList().size() == 0 && triplePhrase.getEffectPhraseList().size() == 0){
 					continue;
 				}
+				
 				triplePhrase.setMedicineName(medicineName);
+				for(Phrase phrase : triplePhrase.getTargetPhraseList()){
+					phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+					for(Morpheme morpheme : phrase.getMorphemeList()){
+						morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+					}
+				}
+				
+				for(Phrase phrase : triplePhrase.getEffectPhraseList()){
+					phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+					for(Morpheme morpheme : phrase.getMorphemeList()){
+						morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+					}
+				}
+				
+				TripleSet tripleset = GetTripleSet.getTripleSet(triplePhrase);
+				
 				System.out.println("------------------------------------------------------------------------------------");
 				System.out.println("\r\nId:" +record.getId());
 				System.out.println("\r\n文:" + sentenceTextBefore);
 				System.out.println("薬剤名:" + triplePhrase.getMedicineName());
-				System.out.println("対象要素存在文節:" + triplePhrase.getTargetPhrase());
-				System.out.println("効果要素存在文節:" + triplePhrase.getEffectPhrase());
+				System.out.println("対象:" + tripleset.getTarget());
+				System.out.println("効果:" + tripleset.getEffect());
 
 				triplePhraseList.add(triplePhrase);
 

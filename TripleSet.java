@@ -7,10 +7,8 @@ public class TripleSet {
 	private String effect;
 	
 	
-	public TripleSet(String medicineName, String target, String effect) {
-		this.medicineName = medicineName;
-		this.target = target;
-		this.effect = effect;
+	public TripleSet() {
+		
 	}
 
 

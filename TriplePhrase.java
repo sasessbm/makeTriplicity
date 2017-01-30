@@ -1,40 +1,52 @@
 package makeTriplicity;
 
+import java.util.ArrayList;
+
 public class TriplePhrase {
 	
 	private String medicineName;
-	private String targetPhrase;
-	private String effectPhrase;
+	private ArrayList<Phrase> targetPhraseList;
+	private ArrayList<Phrase> effectPhraseList;
 	
-	public TriplePhrase(String medicineName, String targetPhrase,
-			String effectPhrase) {
-		this.medicineName = medicineName;
-		this.targetPhrase = targetPhrase;
-		this.effectPhrase = effectPhrase;
+
+	public TriplePhrase() {
+		this.medicineName = "";
+		this.targetPhraseList = new ArrayList<Phrase>();
+		this.effectPhraseList = new ArrayList<Phrase>();
 	}
+
 
 	public String getMedicineName() {
 		return medicineName;
 	}
 
+
 	public void setMedicineName(String medicineName) {
 		this.medicineName = medicineName;
 	}
 
-	public String getTargetPhrase() {
-		return targetPhrase;
+
+	public ArrayList<Phrase> getTargetPhraseList() {
+		return targetPhraseList;
 	}
 
-	public void setTargetPhrase(String targetPhrase) {
-		this.targetPhrase = targetPhrase;
+
+	public void setTargetPhraseList(ArrayList<Phrase> targetPhraseList) {
+		this.targetPhraseList = targetPhraseList;
 	}
 
-	public String getEffectPhrase() {
-		return effectPhrase;
+
+	public ArrayList<Phrase> getEffectPhraseList() {
+		return effectPhraseList;
 	}
 
-	public void setEffectPhrase(String effectPhrase) {
-		this.effectPhrase = effectPhrase;
-	}
 
+	public void setEffectPhraseList(ArrayList<Phrase> effectPhraseList) {
+		this.effectPhraseList = effectPhraseList;
+	}
+	
+	
+	
+	
+	
 }
