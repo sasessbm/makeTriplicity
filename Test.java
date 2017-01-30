@@ -20,8 +20,8 @@ public class Test {
 //		sentenceText = Preprocessor.deleteParentheses(sentenceText);
 //		System.out.println("文:" + sentenceText);
 		
-		String sentenceText = "リンデロン減量で指はパンパンに腫れ 右肘は曲がらなくなった ";
-		String medicineName = "リンデロン";
+		String sentenceText = "リウマトレックスを減らすと肝機能が改善";
+		String medicineName = "リウマトレックス";
 		
 		//前処理
 		sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);

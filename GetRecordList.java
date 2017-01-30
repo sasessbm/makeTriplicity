@@ -35,7 +35,8 @@ public class GetRecordList {
 			Record record;
 			Snippet snippet;
 			//sql = "select snippet from testTable where id = " + id;
-			sql = "select distinct * from tobyo_table where id >=" + startRecordNum + " and id <= " + endRecordNum;
+			sql = "select * from tobyo_table_no_double where id >=" + startRecordNum + " and id <= " + endRecordNum
+					+ " order by id";
 			System.out.println(sql);
 			ResultSet rs = stm.executeQuery(sql);
 

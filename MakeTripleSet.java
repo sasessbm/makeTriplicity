@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import test.CaboChaTest3;
 
-public class MakeTriplicity {
+public class MakeTripleSet {
 
 	public static void main(String[] args) throws Exception {
 
