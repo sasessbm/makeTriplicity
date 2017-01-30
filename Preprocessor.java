@@ -41,49 +41,43 @@ public class Preprocessor {
 
 	//薬剤名を含まない()削除
 	public static String deleteParentheses(String sentenceText){
-
-		String textInParentheses = "";
-		int indexStart = -1;
-		int indexParenthesesLeft = -1;
-		int indexParenthesesRight = -1;
-
-		//半角
-		while (true){
-			indexParenthesesLeft = sentenceText.indexOf("(", indexStart + 1);
-			indexParenthesesRight = sentenceText.indexOf(")", indexStart + 1);
-			if(indexParenthesesLeft == -1){ break; }
-			if(indexParenthesesLeft < indexParenthesesRight){
-				textInParentheses = sentenceText.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-
-				if(!textInParentheses.contains("MEDICINE")){
-					sentenceText = sentenceText.replace(textInParentheses, "");
-				}
-				indexStart = indexParenthesesRight;
-			}
-		}
 		
-		textInParentheses = "";
-		indexStart = -1;
-		indexParenthesesLeft = -1;
-		indexParenthesesRight = -1;
-
+		//半角
+		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"(" , ")");
 		//全角
-		while (true){
-			indexParenthesesLeft = sentenceText.indexOf("（", indexStart + 1);
-			indexParenthesesRight = sentenceText.indexOf("）", indexStart + 1);
-			if(indexParenthesesLeft == -1){ break; }
-			if(indexParenthesesLeft < indexParenthesesRight){
-				textInParentheses = sentenceText.substring(indexParenthesesLeft, indexParenthesesRight + 1);
-
-				if(!textInParentheses.contains("MEDICINE")){
-					sentenceText = sentenceText.replace(textInParentheses, "");
-				}
-				indexStart = indexParenthesesRight;
-			}
-		}
+		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"（" , "）");
+		//半角＋全角
+		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"(" , "）");
+		//全角＋半角
+		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"（" , ")");
 		
 		return sentenceText;
-
+		
+	}
+	
+	public static String deleteTextBetweenTwoCharacer(String sentenceText, String firstCharacter, String secondCharacter){
+		
+		String textBetweenTwoCharacter = "";
+		int indexStart = -1;
+		int indexFirstCharacter = -1;
+		int indexSecondCharacter = -1;
+		
+		while (true){
+			
+			indexFirstCharacter = sentenceText.indexOf(firstCharacter, indexStart + 1);
+			indexSecondCharacter = sentenceText.indexOf(secondCharacter, indexStart + 1);
+			if(indexFirstCharacter == -1 || indexSecondCharacter == -1){ break; }
+			if(indexFirstCharacter < indexSecondCharacter){
+				textBetweenTwoCharacter = sentenceText.substring(indexFirstCharacter, indexSecondCharacter + 1);
+				if(!textBetweenTwoCharacter.contains("MEDICINE")){
+					sentenceText = sentenceText.replace(textBetweenTwoCharacter, "");
+				}
+				indexStart = indexSecondCharacter;
+			}
+		}
+	
+	return sentenceText;
+		
 	}
 
 

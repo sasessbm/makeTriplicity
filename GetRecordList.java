@@ -15,11 +15,10 @@ public class GetRecordList {
 	//プロキシ設定
 	private static Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("proxy.nagaokaut.ac.jp", 8080));
 
-	public static  ArrayList<Record> getRecordList(int recordNum) throws Exception {
+	public static  ArrayList<Record> getRecordList(int startRecordNum, int endRecordNum) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		Connection con = null;
-		int idCount = 0;
 		try {
 			// JDBCドライバのロード - JDBC4.0（JDK1.6）以降は不要
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -35,7 +34,7 @@ public class GetRecordList {
 
 
 			//とりあえず最初の recordNum 個を取得
-			for(int id =1; id <= recordNum; id++){
+			for(int id = startRecordNum; id <= endRecordNum; id++){
 				System.out.println(id);
 				Record record;
 				Snippet snippet;

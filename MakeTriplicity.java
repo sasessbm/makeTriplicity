@@ -10,9 +10,10 @@ public class MakeTriplicity {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		int startRecordNum = 10;
+		int endRecordNum = 20;
 		
 		//recordList取得　(recordの生成)
-		recordList = GetRecordList.getRecordList(startRecordNum);
+		recordList = GetRecordList.getRecordList(startRecordNum, endRecordNum);
 		
 		//レコード単位
 		for(Record record : recordList){
