@@ -23,8 +23,12 @@ public class GetTriplePhase {
 			
 			//対象薬剤名のすぐ後ろに手がかり語があるか探索
 			int keywordIndex = isExistKeyword(phrase.getMorphemeList());
+//			System.out.println(phraseText);
+//			System.out.println("keywordIndex"+keywordIndex);
 			if(keywordIndex != -1){
-				if(phrase.getMorphemeList().get(keywordIndex-1).equals("TARGETMEDICINE")){
+				//System.out.println(phrase.getMorphemeList().get(keywordIndex-1).getMorphemeText());
+				if(phrase.getMorphemeList().get(keywordIndex-1).getMorphemeText().equals("TARGETMEDICINE")){
+					//System.out.println("自身のIDを渡す");
 					//自身のIDを渡す
 					judgeKeywordPhrase(phrase.getId());
 				}
@@ -95,18 +99,35 @@ public class GetTriplePhase {
 	//「対象」要素存在文節判定
 	public static void judgeTargetPhrase(int id){
 		
+		String targetPhraseText = "";
+		boolean findPhrase = false;
+		
 		//逆から探索
 		for(int i=1; i<=phraseList.size(); i++){
-			if(phraseList.get(phraseList.size()-i).getDependencyIndex() == id){
+			if(phraseList.get(phraseList.size()-i).getDependencyIndex() == id || findPhrase){
+				
 				String lastMorphemeText = phraseList.get(phraseList.size()-i).getMorphemeList()
 										  .get(phraseList.get(phraseList.size()-i).getMorphemeList().size()-1)
 										  .getMorphemeText();
 				
-				if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") || lastMorphemeText.equals("を")){
-					triplePhrase.setTargetPhrase(phraseList.get(phraseList.size()-i).getPhraseText());
-					//phraseList.get(phraseList.size()-i).setPhraseType("Target");
-					break;
+				if(findPhrase){
+					if(lastMorphemeText.equals("の")){
+						targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText() + targetPhraseText;
+					}else{
+						triplePhrase.setTargetPhrase(targetPhraseText);
+						break;
+					}
+				}else{
+					if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") || lastMorphemeText.equals("を")){
+						findPhrase = true;
+						targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText();
+						
+						//triplePhrase.setTargetPhrase(phraseList.get(phraseList.size()-i).getPhraseText());
+						//phraseList.get(phraseList.size()-i).setPhraseType("Target");
+						//break;
+					}
 				}
+				
 			}
 		}
 		
