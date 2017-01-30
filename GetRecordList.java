@@ -36,6 +36,7 @@ public class GetRecordList {
 
 			//とりあえず最初の recordNum 個を取得
 			for(int id =1; id <= recordNum; id++){
+				System.out.println(id);
 				Record record;
 				Snippet snippet;
 				//sql = "select snippet from testTable where id = " + id;

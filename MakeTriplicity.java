@@ -9,10 +9,10 @@ public class MakeTriplicity {
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
-		int recordNum = 10;
+		int startRecordNum = 10;
 		
 		//recordList取得　(recordの生成)
-		recordList = GetRecordList.getRecordList(recordNum);
+		recordList = GetRecordList.getRecordList(startRecordNum);
 		
 		//レコード単位
 		for(Record record : recordList){
@@ -31,17 +31,17 @@ public class MakeTriplicity {
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
 			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
 			
-			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
+//			System.out.println("-----------------------------------------------------------------------------------------------------------------------");
 			System.out.println("Id:" +record.getId());
 			System.out.println("スニペット:" + snippet.getSnippetText());
-			System.out.println("薬剤名:" +record.getMedicineName());
-			System.out.println("病名:" +record.getDiseaseName());
-			System.out.println("性別:" +record.getSex());
-			System.out.println("ブログタイトル:" +record.getTitle_blog());
-			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
-			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
-			System.out.println("年齢:" +record.getAge());
-			System.out.println("\r\n以下、1文単位");
+//			System.out.println("薬剤名:" +record.getMedicineName());
+//			System.out.println("病名:" +record.getDiseaseName());
+//			System.out.println("性別:" +record.getSex());
+//			System.out.println("ブログタイトル:" +record.getTitle_blog());
+//			System.out.println("ブログ記事タイトル:" +record.getTitle_blogArticle());
+//			System.out.println("ブログ記事ＵＲＬ:" +record.getUrl_blogArticle());
+//			System.out.println("年齢:" +record.getAge());
+//			System.out.println("\r\n以下、1文単位");
 			int indexSentence = 0;
 			
 			ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
@@ -63,7 +63,7 @@ public class MakeTriplicity {
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				
-				System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
+				//System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
 				
 				//構文解析結果をXml形式で取得
 				ArrayList<String> xmlList = new ArrayList<String>();
@@ -73,22 +73,22 @@ public class MakeTriplicity {
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
 				int indexPhrase = -1;
-				System.out.println("\r\n以下、文節単位");
+				//System.out.println("\r\n以下、文節単位");
 				
 				//文節単位
-				for(Phrase phrase : phraseList){
-					System.out.println("---------------------------------------------------");
-					indexPhrase ++;
-					System.out.println("\r\n文節" + indexPhrase);
-					System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
-					System.out.println("\r\n以下、形態素単位");
-					
-					//形態素単位
-					for(Morpheme morpheme : phrase.getMorphemeList()){
-						System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
-						
-					}
-				}
+//				for(Phrase phrase : phraseList){
+//					System.out.println("---------------------------------------------------");
+//					indexPhrase ++;
+//					System.out.println("\r\n文節" + indexPhrase);
+//					System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
+//					System.out.println("\r\n以下、形態素単位");
+//					
+//					//形態素単位
+//					for(Morpheme morpheme : phrase.getMorphemeList()){
+//						System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
+//						
+//					}
+//				}
 				
 				TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
 				triplePhrase.setMedicineName(medicineName);
