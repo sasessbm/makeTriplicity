@@ -31,26 +31,43 @@ public class GetRecordList {
 			Statement stm = con.createStatement();
 
 			String sql = "";
+			
+			Record record;
+			Snippet snippet;
+			//sql = "select snippet from testTable where id = " + id;
+			sql = "select distinct * from tobyo_table where id >=" + startRecordNum + " and id <= " + endRecordNum;
+			System.out.println(sql);
+			ResultSet rs = stm.executeQuery(sql);
 
-
-			//とりあえず最初の recordNum 個を取得
-			for(int id = startRecordNum; id <= endRecordNum; id++){
-				//System.out.println(id);
-				Record record;
-				Snippet snippet;
-				//sql = "select snippet from testTable where id = " + id;
-				sql = "select * from tobyo_table where id = " + id;
-				ResultSet rs = stm.executeQuery(sql);
-
-				while(rs.next()){
-					snippet = new Snippet(rs.getString("snippet"));
-					record = new Record(rs.getInt("id"), snippet, rs.getString("medicineName"), 
-							rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
-							rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
-							rs.getString("age"),rs.getString("blogArticle") );
-					recordList.add(record);
-				}
+			while(rs.next()){
+				snippet = new Snippet(rs.getString("snippet"));
+				record = new Record(rs.getInt("id"), snippet, rs.getString("medicineName"), 
+						rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
+						rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
+						rs.getString("age"),rs.getString("blogArticle") );
+				recordList.add(record);
 			}
+			
+
+
+//			//とりあえず最初の recordNum 個を取得
+//			for(int id = startRecordNum; id <= endRecordNum; id++){
+//				//System.out.println(id);
+//				Record record;
+//				Snippet snippet;
+//				//sql = "select snippet from testTable where id = " + id;
+//				sql = "select * from tobyo_table where id = " + id;
+//				ResultSet rs = stm.executeQuery(sql);
+//
+//				while(rs.next()){
+//					snippet = new Snippet(rs.getString("snippet"));
+//					record = new Record(rs.getInt("id"), snippet, rs.getString("medicineName"), 
+//							rs.getString("diseaseName"), rs.getString("sex"),rs.getString("title_blog"),
+//							rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
+//							rs.getString("age"),rs.getString("blogArticle") );
+//					recordList.add(record);
+//				}
+//			}
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			System.out.println("JDBCドライバのロードに失敗しました。");

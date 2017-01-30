@@ -46,7 +46,7 @@ public class GetTriplePhase {
 			for(Morpheme morpheme : morphemeList){
 				morphemeIndex ++;
 				String originalForm = morpheme.getOriginalForm();
-				System.out.println("originalForm:" + originalForm);
+				//System.out.println("originalForm:" + originalForm);
 				for(String keyword : keywordList){
 					if(originalForm.equals(keyword)){
 						keywordIndex = morphemeIndex;
