@@ -57,7 +57,7 @@ public class Test {
 //		}
 		
 		String medicineName = "アバスチン";
-		String sentenceText="... 2007.07.22 このブログを購読する アバスチン [ 薬 ] 　日経ビジネス（2007.6.11)からの抜粋です。";
+		String sentenceText="...（お借りしました）W先生から、アバスチンのハナシが出たので、お勉強";
 		System.out.println("文:" + sentenceText);
 		sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 		System.out.println("文:" + sentenceText);

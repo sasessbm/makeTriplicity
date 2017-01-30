@@ -72,8 +72,9 @@ public class Preprocessor {
 				if(!textBetweenTwoCharacter.contains("MEDICINE")){
 					sentenceText = sentenceText.replace(textBetweenTwoCharacter, "");
 				}
-				indexStart = indexSecondCharacter;
+				
 			}
+			indexStart = indexSecondCharacter;
 		}
 	
 	return sentenceText;

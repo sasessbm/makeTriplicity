@@ -9,20 +9,12 @@ public class GetTriplePhase {
 	private static ArrayList<String> keywordList = 
 			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword.txt");
 	private static TriplePhrase triplePhrase;
-	//private static ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
 
 	public static TriplePhrase getTriplePhrase(ArrayList<Phrase> phraseList) {
 		
 		GetTriplePhase.phraseList = new ArrayList<Phrase>();
 		triplePhrase = new TriplePhrase("","","");
 		GetTriplePhase.phraseList = phraseList;
-		//String phraseText = "";
-		//int dependencyIndex = -10;
-		//boolean targetMedicineFlag = false;
-		
-		//手がかり語リスト取得
-//		ArrayList<String> keywordList = new ArrayList<String>();
-//		keywordList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword.txt");
 		
 		for(Phrase phrase : phraseList){
 			String phraseText = phrase.getPhraseText();
@@ -42,30 +34,10 @@ public class GetTriplePhase {
 			judgeKeywordPhrase(phrase.getDependencyIndex());
 		}
 		
-		
-//		for(Phrase phrase : phraseList){
-//
-//			phraseText = phrase.getPhraseText();
-//
-//			if(phrase.getDependencyIndex() == dependencyIndex){
-//				if(isExistKeyword(phraseText, keywordList)){
-//					phrase.setPhraseType("Keyword");
-//				}
-//			}
-//
-//			if(!phraseText.contains("TARGETMEDICINE")){ continue; }
-//			//dependencyIndex = phrase.getDependencyIndex();
-//			phrase.setPhraseType("Medicine");
-//			//targetMedicineFlag = true;
-//
-//
-//
-//		}
-		
 		return triplePhrase;
-
 	}
 	
+	//手がかり語の位置を探索
 	public static int isExistKeyword(String phrase){
 		
 		int keywordIndex = -1;
@@ -89,7 +61,7 @@ public class GetTriplePhase {
 					String partOfSpeechDetails = phrase.getMorphemeList()
 												.get(phrase.getMorphemeList().size()-1).getPartOfSpeechDetails();
 					if(partOfSpeechDetails.contains("格助詞") || partOfSpeechDetails.contains("接続助詞")){
-						phrase.setPhraseType("Keyword");
+						//phrase.setPhraseType("Keyword");
 						judgeEffectPhrase(phrase.getDependencyIndex());
 						break;
 					}

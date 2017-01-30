@@ -35,7 +35,7 @@ public class GetRecordList {
 
 			//とりあえず最初の recordNum 個を取得
 			for(int id = startRecordNum; id <= endRecordNum; id++){
-				System.out.println(id);
+				//System.out.println(id);
 				Record record;
 				Snippet snippet;
 				//sql = "select snippet from testTable where id = " + id;
@@ -57,7 +57,7 @@ public class GetRecordList {
 		} catch (SQLException e) {
 			System.out.println("MySQLに接続できませんでした。" + e);
 		} finally {
-			System.out.println("test");
+			//System.out.println("test");
 			if (con != null) {
 				try {
 					con.close();
