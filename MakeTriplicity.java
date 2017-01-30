@@ -9,8 +9,8 @@ public class MakeTriplicity {
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
-		int startRecordNum = 50;
-		int endRecordNum = 60;
+		int startRecordNum = 400651;
+		int endRecordNum = 400651;
 		
 		//recordList取得　(recordの生成)
 		recordList = GetRecordList.getRecordList(startRecordNum, endRecordNum);

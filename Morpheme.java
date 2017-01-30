@@ -7,6 +7,7 @@ public class Morpheme {
 	private String feature;
 	private String partOfSpeech;
 	private String partOfSpeechDetails;
+	private String originalForm;
 	
 	
 	//コンストラクタ
@@ -17,8 +18,10 @@ public class Morpheme {
 		String[] featureArray = feature.split(",");
 		this.partOfSpeech = featureArray[0];
 		this.partOfSpeechDetails = featureArray[1];
+		this.originalForm = featureArray[6];
 	}
 	
+
 	public int getId() {
 		return id;
 	}
@@ -63,6 +66,12 @@ public class Morpheme {
 		this.partOfSpeechDetails = partOfSpeechDetails;
 	}
 	
-	
+	public String getOriginalForm() {
+		return originalForm;
+	}
+
+	public void setOriginalForm(String originalForm) {
+		this.originalForm = originalForm;
+	}
 	
 }

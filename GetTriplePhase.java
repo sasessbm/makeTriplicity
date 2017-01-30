@@ -22,14 +22,14 @@ public class GetTriplePhase {
 			phrase.setPhraseType("Medicine");
 			
 			//対象薬剤名のすぐ後ろに手がかり語があるか探索
-			int keywordIndex = isExistKeyword(phraseText);
+			int keywordIndex = isExistKeyword(phrase.getMorphemeList());
 			if(keywordIndex != -1){
-				if(phraseText.indexOf("TARGETMEDICINE") + 14 == keywordIndex){
+				if(phrase.getMorphemeList().get(keywordIndex-1).equals("TARGETMEDICINE")){
 					//自身のIDを渡す
 					judgeKeywordPhrase(phrase.getId());
 				}
+				
 			}
-			
 			//係り先番号を渡す
 			judgeKeywordPhrase(phrase.getDependencyIndex());
 		}
@@ -38,24 +38,30 @@ public class GetTriplePhase {
 	}
 	
 	//手がかり語の位置を探索
-	public static int isExistKeyword(String phrase){
-		
-		int keywordIndex = -1;
-		
-		for(String keyword : keywordList){
-			if(phrase.contains(keyword)){
-				keywordIndex = phrase.indexOf(keyword);
+		public static int isExistKeyword(ArrayList<Morpheme> morphemeList){
+			
+			int keywordIndex = -1;
+			int morphemeIndex = -1;
+			
+			for(Morpheme morpheme : morphemeList){
+				morphemeIndex ++;
+				String originalForm = morpheme.getOriginalForm();
+				System.out.println("originalForm:" + originalForm);
+				for(String keyword : keywordList){
+					if(originalForm.equals(keyword)){
+						keywordIndex = morphemeIndex;
+					}
+				}
 			}
+			return keywordIndex;
 		}
-		return keywordIndex;
-	}
 	
 	//「手がかり語」要素存在文節判定
 	public static void judgeKeywordPhrase(int dependencyIndex){
 		
 		for(Phrase phrase : phraseList){
 			if(phrase.getId() == dependencyIndex){
-				if(isExistKeyword(phrase.getPhraseText()) != -1){
+				if(isExistKeyword(phrase.getMorphemeList()) != -1){
 					
 					//一番最後の文節が、格助詞または接続助詞か確認
 					String partOfSpeechDetails = phrase.getMorphemeList()
