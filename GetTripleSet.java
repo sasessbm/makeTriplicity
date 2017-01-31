@@ -18,21 +18,23 @@ public class GetTripleSet {
 		for(Phrase phrase : triplePhrase.getTargetPhraseList()){
 			for(Morpheme morpheme : phrase.getMorphemeList()){
 				targetMorphemeList.add(morpheme);
+				target += morpheme.getMorphemeText();
 			}
 		}
 		
 		for(Phrase phrase : triplePhrase.getEffectPhraseList()){
 			for(Morpheme morpheme : phrase.getMorphemeList()){
 				effectMorphemeList.add(morpheme);
+				effect += morpheme.getMorphemeText();
 			}
 		}
 		
-		target = getAttribute(targetMorphemeList);
-		effect = getAttribute(effectMorphemeList);
+		//target = getAttribute(targetMorphemeList);
+		//effect = getAttribute(effectMorphemeList);
 		
 		tripleSet.setMedicineName(medicineName);
-		tripleSet.setTarget(target);
-		tripleSet.setEffect(effect);
+		tripleSet.setTarget(target.replace("、", ""));
+		tripleSet.setEffect(effect.replace("、", ""));
 		
 		return tripleSet;
 	}
@@ -40,18 +42,44 @@ public class GetTripleSet {
 	public static String getAttribute(ArrayList<Morpheme> morphemeList){
 		
 		String attribute = "";
+		int denialIndex = 0;
+		int morphemeIndex = 0;
 		
 		for(Morpheme morpheme : morphemeList){
-			if((morpheme.getPartOfSpeech().equals("助詞") || morpheme.getPartOfSpeech().equals("助動詞")) 
+			//System.out.println(morpheme.getMorphemeText());
+			if(morpheme.getOriginalForm().equals("ない")){
+				denialIndex ++;
+			}
+		}
+		
+		//System.out.println(denialIndex);
+		
+		for(Morpheme morpheme : morphemeList){
+			morphemeIndex++;
+			
+//			if((morpheme.getPartOfSpeech().equals("助詞") || morpheme.getPartOfSpeech().equals("助動詞")) 
+//					& !morpheme.getOriginalForm().equals("の")){ break; }
+			
+			if(morpheme.getPartOfSpeech().equals("助詞") 
 					& !morpheme.getOriginalForm().equals("の")){ break; }
 			
 			if(morpheme.getPartOfSpeech().equals("動詞")){
-				//動詞は原形で取得
-				attribute += morpheme.getOriginalForm(); 
+				
+				if(denialIndex % 2 == 1 || morphemeIndex != morphemeList.size()){
+					attribute += morpheme.getMorphemeText(); 
+				}else{
+					//動詞は原形で取得
+					attribute += morpheme.getOriginalForm();
+				}
+				 
 			}else{
 				attribute += morpheme.getMorphemeText(); 
 			}
 		}
+		
+//		if(denialIndex % 2 == 1){
+//			attribute += "ない";
+//		}
 		
 		return attribute;
 	}

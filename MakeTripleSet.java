@@ -9,8 +9,10 @@ public class MakeTripleSet {
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
-		int startRecordNum = 62127;
-		int endRecordNum = 62127;
+		//int recordNum = 100;
+		int startRecordNum = 5000;
+		int endRecordNum = 6000;
+		int getTripleSetNum = 0;
 
 		//recordList取得　(recordの生成)
 		recordList = GetRecordList.getRecordList(startRecordNum, endRecordNum);
@@ -65,6 +67,12 @@ public class MakeTripleSet {
 				//前処理
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
+				
+				//空白の文は対象としない
+				if(sentenceText.equals(null) || sentenceText.equals("")){
+					//System.out.println("\r\n文" + indexSentence + ":null");
+					continue;
+				}
 
 				//System.out.println("\r\n文" + indexSentence + ":" + sentenceText);
 
@@ -93,9 +101,11 @@ public class MakeTripleSet {
 				//					}
 				//				}
 
+				//System.out.println("\r\nId:" +record.getId());
+				//System.out.println("\r\n文:" + sentenceTextBefore);
 				TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
 				
-				if(triplePhrase.getTargetPhraseList().size() == 0 && triplePhrase.getEffectPhraseList().size() == 0){
+				if(triplePhrase.getTargetPhraseList().size() == 0 || triplePhrase.getEffectPhraseList().size() == 0){
 					continue;
 				}
 				
@@ -113,22 +123,27 @@ public class MakeTripleSet {
 						morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
 					}
 				}
-				
+				//System.out.println("\r\n文:" + sentenceTextBefore);
 				TripleSet tripleset = GetTripleSet.getTripleSet(triplePhrase);
 				
 				System.out.println("------------------------------------------------------------------------------------");
 				System.out.println("\r\nId:" +record.getId());
-				System.out.println("\r\n文:" + sentenceTextBefore);
+				System.out.println("文:" + sentenceTextBefore);
 				System.out.println("薬剤名:" + triplePhrase.getMedicineName());
 				System.out.println("対象:" + tripleset.getTarget());
 				System.out.println("効果:" + tripleset.getEffect());
+				getTripleSetNum++;
 
-				triplePhraseList.add(triplePhrase);
+				//triplePhraseList.add(triplePhrase);
 
 			}
 
 
 		}
+		
+		System.out.println("------------------------------------------------------------------------------------");
+		System.out.println((endRecordNum+1 - startRecordNum) + "データ中、三つ組を" + getTripleSetNum +"個取得できました！！");
+		System.out.println("終了！！！");
 
 	}
 

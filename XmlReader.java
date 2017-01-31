@@ -37,6 +37,7 @@ public class XmlReader {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder documentBuilder = factory.newDocumentBuilder();
 		InputSource inputSource = new InputSource(new StringReader(xmlTextAll));
+		//System.out.println(xmlTextAll);
 		Document document = documentBuilder.parse(inputSource);
 
 		Element root = document.getDocumentElement();

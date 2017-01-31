@@ -24,9 +24,10 @@ public class GetTriplePhase {
 			
 			//対象薬剤名のすぐ後ろに手がかり語があるか探索
 			int keywordIndex = isExistKeyword(phrase.getMorphemeList());
+//			System.out.println(keywordIndex);
 //			System.out.println(phraseText);
 //			System.out.println("keywordIndex"+keywordIndex);
-			if(keywordIndex != -1){
+			if(keywordIndex > 0){
 				//System.out.println(phrase.getMorphemeList().get(keywordIndex-1).getMorphemeText());
 				if(phrase.getMorphemeList().get(keywordIndex-1).getMorphemeText().equals("TARGETMEDICINE")){
 					//System.out.println("自身のIDを渡す");

@@ -31,11 +31,11 @@ public class Preprocessor {
 			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
 		}
 
-		for(String medicineNameInList : medicineNameList){
-			if(sentenceText.contains(medicineNameInList)){
-				sentenceText = sentenceText.replace(medicineNameInList,"OTHERMEDICINE");
-			}
-		}
+//		for(String medicineNameInList : medicineNameList){
+//			if(sentenceText.contains(medicineNameInList)){
+//				sentenceText = sentenceText.replace(medicineNameInList,"OTHERMEDICINE");
+//			}
+//		}
 		return sentenceText;
 	}
 
