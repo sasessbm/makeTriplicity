@@ -20,6 +20,7 @@ public class GetRecordList {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		Connection con = null;
+		int getRecordNum = 0;
 		//boolean[] randomNumArray = new boolean[endRecordNum - startRecordNum];
 		//randomNumArray = makeRandomNumArray(recordNum, startRecordNum, endRecordNum);
 		
@@ -52,6 +53,7 @@ public class GetRecordList {
 							rs.getString("title_blogArticle"),rs.getString("url_blogArticle"),
 							rs.getString("age"),rs.getString("blogArticle") );
 					recordList.add(record);
+					getRecordNum++;
 				}
 			//}
 			
@@ -65,6 +67,7 @@ public class GetRecordList {
 				try {
 					con.close();
 					System.out.println("MySQLのクローズに成功しました。");
+					System.out.println("取得レコード数は　" + getRecordNum + "　です");
 				} catch (SQLException e) {
 					System.out.println("MySQLのクローズに失敗しました。");
 				}

@@ -10,7 +10,7 @@ public class MakeTripleSet {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 5000;
+		int startRecordNum = 0;
 		int endRecordNum = 6000;
 		int getTripleSetNum = 0;
 
@@ -127,8 +127,11 @@ public class MakeTripleSet {
 				TripleSet tripleset = GetTripleSet.getTripleSet(triplePhrase);
 				
 				System.out.println("------------------------------------------------------------------------------------");
-				System.out.println("\r\nId:" +record.getId());
-				System.out.println("文:" + sentenceTextBefore);
+				System.out.print("\r\nId:" +record.getId());
+				System.out.print(" 性別:" +record.getSex());
+				System.out.print(" 年齢:" +record.getAge());
+				System.out.println(" 病名:" +record.getDiseaseName());
+				System.out.println("\r\n文:" + sentenceTextBefore);
 				System.out.println("薬剤名:" + triplePhrase.getMedicineName());
 				System.out.println("対象:" + tripleset.getTarget());
 				System.out.println("効果:" + tripleset.getEffect());
@@ -142,7 +145,7 @@ public class MakeTripleSet {
 		}
 		
 		System.out.println("------------------------------------------------------------------------------------");
-		System.out.println((endRecordNum+1 - startRecordNum) + "データ中、三つ組を" + getTripleSetNum +"個取得できました！！");
+		System.out.println("三つ組を" + getTripleSetNum +"個取得できました！！");
 		System.out.println("終了！！！");
 
 	}
