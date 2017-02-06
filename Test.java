@@ -35,11 +35,11 @@ public class Test {
 		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 		phraseList = XmlReader.GetPhraseList(xmlList);
 		
-		TriplePhrase triplePhrase = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
+		//TriplePhrase triplePhrase = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 		
-		triplePhrase.setMedicineName(medicineName);
+		///triplePhrase.setMedicineName(medicineName);
 		
-		System.out.println("薬剤名:" + triplePhrase.getMedicineName());
+		//System.out.println("薬剤名:" + triplePhrase.getMedicineName());
 		//System.out.println("対象要素存在文節:" + triplePhrase.getTargetPhrase());
 		//System.out.println("効果要素存在文節:" + triplePhrase.getEffectPhrase());
 

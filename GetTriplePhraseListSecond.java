@@ -29,15 +29,17 @@ public class GetTriplePhraseListSecond {
 
 					//評価表現でない場合
 					if(!morphemeList.get(morphemeIndex).getOriginalForm().contains(evalWord)){ continue; }
-
-					effectPhraseList.add(phraseList.get(phraseIndex));
-					triplePhrase.setEffectPhraseList(effectPhraseList);
+					
+					phraseList.get(phraseIndex).setEvalWord(morphemeList.get(morphemeIndex).getMorphemeText());
 
 					judgeTargetPhrase(phraseList.get(phraseIndex).getId());
 
 				}
 
 			}
+			
+			effectPhraseList.add(phraseList.get(phraseIndex));
+			triplePhrase.setEffectPhraseList(effectPhraseList);
 
 		}
 		triplePhraseList.add(triplePhrase);

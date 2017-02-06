@@ -2,7 +2,7 @@ package makeTriplicity;
 
 import java.util.ArrayList;
 
-public class GetTripleSet {
+public class GetTripleSetFirst {
 
 	public static TripleSet getTripleSet(TriplePhrase triplePhrase) {
 		

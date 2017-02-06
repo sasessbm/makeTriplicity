@@ -9,13 +9,14 @@ public class Phrase {
 	private int dependencyIndex;
 	private ArrayList<Morpheme> morphemeList;
 	private String phraseType;
-	
+	private ArrayList<String> evalWordList;
 
 	//コンストラクタ
 	public Phrase(int id, String phraseText, int dependencyIndex) {
 		this.id = id;
 		this.phraseText = phraseText;
 		this.dependencyIndex = dependencyIndex;
+		this.evalWordList = new ArrayList<String>();
 	}
 	
 	public int getId() {
@@ -58,5 +59,12 @@ public class Phrase {
 		this.phraseType = phraseType;
 	}
 	
+	public ArrayList<String> getEvalWordList() {
+		return evalWordList;
+	}
+
+	public void setEvalWord(String evalWord) {
+		this.evalWordList.add(evalWord);
+	}
 
 }
