@@ -11,7 +11,7 @@ public class MakeTripleSet {
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
 		int startRecordNum = 0;
-		int endRecordNum = 6000;
+		int endRecordNum = 1000;
 		int getTripleSetNum = 0;
 
 		//recordList取得　(recordの生成)
@@ -47,7 +47,7 @@ public class MakeTripleSet {
 			//			System.out.println("\r\n以下、1文単位");
 			int indexSentence = 0;
 
-			ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
+			//ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
 			String sentenceTextBefore = "";
 			//文単位
 			for(String sentenceText : sentenceTextList){
@@ -103,42 +103,49 @@ public class MakeTripleSet {
 
 				//System.out.println("\r\nId:" +record.getId());
 				//System.out.println("\r\n文:" + sentenceTextBefore);
-				TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
+				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
+				ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
+				//TriplePhrase triplePhrase = GetTriplePhaseFirst.getTriplePhrase(phraseList);
 				
-				if(triplePhrase.getTargetPhraseList().size() == 0 || triplePhrase.getEffectPhraseList().size() == 0){
-					continue;
-				}
-				
-				triplePhrase.setMedicineName(medicineName);
-				for(Phrase phrase : triplePhrase.getTargetPhraseList()){
-					phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
-					for(Morpheme morpheme : phrase.getMorphemeList()){
-						morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+				for(TriplePhrase triplePhrase : triplePhraseList){
+					if(triplePhrase.getTargetPhraseList().size() == 0 || triplePhrase.getEffectPhraseList().size() == 0){
+						continue;
 					}
-				}
-				
-				for(Phrase phrase : triplePhrase.getEffectPhraseList()){
-					phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
-					for(Morpheme morpheme : phrase.getMorphemeList()){
-						morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+					
+					//薬剤名セット
+					triplePhrase.setMedicineName(medicineName);
+					for(Phrase phrase : triplePhrase.getTargetPhraseList()){
+						phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+						for(Morpheme morpheme : phrase.getMorphemeList()){
+							morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+						}
 					}
+					
+					for(Phrase phrase : triplePhrase.getEffectPhraseList()){
+						phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+						for(Morpheme morpheme : phrase.getMorphemeList()){
+							morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+						}
+					}
+					//System.out.println("\r\n文:" + sentenceTextBefore);
+					TripleSet tripleset = GetTripleSet.getTripleSet(triplePhrase);
+					
+					System.out.println("------------------------------------------------------------------------------------");
+					System.out.print("\r\nId:" +record.getId());
+					System.out.print(" | 性別:" +record.getSex());
+					System.out.print(" | 年齢:" +record.getAge());
+					System.out.println(" | 病名:" +record.getDiseaseName());
+					System.out.println("\r\n文: " + sentenceTextBefore);
+					System.out.println("薬剤名: " + triplePhrase.getMedicineName());
+					System.out.println("対象: " + tripleset.getTarget());
+					System.out.println("効果: " + tripleset.getEffect());
+					getTripleSetNum++;
+
+					//triplePhraseList.add(triplePhrase);
+
 				}
-				//System.out.println("\r\n文:" + sentenceTextBefore);
-				TripleSet tripleset = GetTripleSet.getTripleSet(triplePhrase);
 				
-				System.out.println("------------------------------------------------------------------------------------");
-				System.out.print("\r\nId:" +record.getId());
-				System.out.print(" 性別:" +record.getSex());
-				System.out.print(" 年齢:" +record.getAge());
-				System.out.println(" 病名:" +record.getDiseaseName());
-				System.out.println("\r\n文:" + sentenceTextBefore);
-				System.out.println("薬剤名:" + triplePhrase.getMedicineName());
-				System.out.println("対象:" + tripleset.getTarget());
-				System.out.println("効果:" + tripleset.getEffect());
-				getTripleSetNum++;
-
-				//triplePhraseList.add(triplePhrase);
-
+				
 			}
 
 

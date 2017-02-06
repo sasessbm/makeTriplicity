@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ListIterator;
 
-public class GetTriplePhase {
+public class GetTriplePhraseListFirst {
 	
 	private static  ArrayList<Phrase> phraseList;
 	private static ArrayList<String> keywordList = 
 			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword.txt");
 	private static TriplePhrase triplePhrase;
 
-	public static TriplePhrase getTriplePhrase(ArrayList<Phrase> phraseList) {
+	public static ArrayList<TriplePhrase> getTriplePhrase(ArrayList<Phrase> phraseList) {
 		
-		GetTriplePhase.phraseList = new ArrayList<Phrase>();
+		GetTriplePhraseListFirst.phraseList = new ArrayList<Phrase>();
+		ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
+		
 		triplePhrase = new TriplePhrase();
-		GetTriplePhase.phraseList = phraseList;
+		GetTriplePhraseListFirst.phraseList = phraseList;
 		
 		for(Phrase phrase : phraseList){
 			String phraseText = phrase.getPhraseText();
@@ -40,7 +42,8 @@ public class GetTriplePhase {
 			judgeKeywordPhrase(phrase.getDependencyIndex());
 		}
 		
-		return triplePhrase;
+		triplePhraseList.add(triplePhrase);
+		return triplePhraseList;
 	}
 	
 	//手がかり語の位置を探索
@@ -109,16 +112,18 @@ public class GetTriplePhase {
 		
 		//逆から探索
 		for(int i=1; i<=phraseList.size(); i++){
-			if(phraseList.get(phraseList.size()-i).getDependencyIndex() == id || findPhrase){
+			int currentIndex = phraseList.size()-i;
+			
+			if(phraseList.get(currentIndex).getDependencyIndex() == id || findPhrase){
 				
-				String lastMorphemeText = phraseList.get(phraseList.size()-i).getMorphemeList()
-										  .get(phraseList.get(phraseList.size()-i).getMorphemeList().size()-1)
+				String lastMorphemeText = phraseList.get(currentIndex).getMorphemeList()
+										  .get(phraseList.get(currentIndex).getMorphemeList().size()-1)
 										  .getMorphemeText();
 				
 				if(findPhrase){
 					if(lastMorphemeText.equals("の")){
-						targetPhraseList.add(phraseList.get(phraseList.size()-i));
-						//targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText() + targetPhraseText;
+						targetPhraseList.add(phraseList.get(currentIndex));
+						//targetPhraseText = phraseList.get(currentIndex).getPhraseText() + targetPhraseText;
 					}else{
 						Collections.reverse(targetPhraseList);
 						triplePhrase.setTargetPhraseList(targetPhraseList);
@@ -127,11 +132,11 @@ public class GetTriplePhase {
 				}else{
 					if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") || lastMorphemeText.equals("を")){
 						findPhrase = true;
-						targetPhraseList.add(phraseList.get(phraseList.size()-i));
-						//targetPhraseText = phraseList.get(phraseList.size()-i).getPhraseText();
+						targetPhraseList.add(phraseList.get(currentIndex));
+						//targetPhraseText = phraseList.get(currentIndex).getPhraseText();
 						
-						//triplePhrase.setTargetPhrase(phraseList.get(phraseList.size()-i).getPhraseText());
-						//phraseList.get(phraseList.size()-i).setPhraseType("Target");
+						//triplePhrase.setTargetPhrase(phraseList.get(currentIndex).getPhraseText());
+						//phraseList.get(currentIndex).setPhraseType("Target");
 						//break;
 					}
 				}

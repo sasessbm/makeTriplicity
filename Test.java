@@ -35,7 +35,7 @@ public class Test {
 		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 		phraseList = XmlReader.GetPhraseList(xmlList);
 		
-		TriplePhrase triplePhrase = GetTriplePhase.getTriplePhrase(phraseList);
+		TriplePhrase triplePhrase = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 		
 		triplePhrase.setMedicineName(medicineName);
 		
