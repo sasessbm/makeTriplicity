@@ -5,45 +5,38 @@ import java.util.ArrayList;
 public class TriplePhrase {
 	
 	private String medicineName;
-	private ArrayList<Phrase> targetPhraseList;
-	private ArrayList<Phrase> effectPhraseList;
+	private Phrase targetPhrase;
+	private Phrase effectPhrase;
 	
-
 	public TriplePhrase() {
-		this.medicineName = "";
-		this.targetPhraseList = new ArrayList<Phrase>();
-		this.effectPhraseList = new ArrayList<Phrase>();
+		
 	}
-
-
+	
 	public String getMedicineName() {
 		return medicineName;
 	}
-
-
+	
 	public void setMedicineName(String medicineName) {
 		this.medicineName = medicineName;
 	}
-
-
-	public ArrayList<Phrase> getTargetPhraseList() {
-		return targetPhraseList;
+	
+	public Phrase getTargetPhrase() {
+		return targetPhrase;
 	}
-
-
-	public void setTargetPhraseList(ArrayList<Phrase> targetPhraseList) {
-		this.targetPhraseList = targetPhraseList;
+	
+	public void setTargetPhrase(Phrase targetPhrase) {
+		this.targetPhrase = targetPhrase;
 	}
-
-
-	public ArrayList<Phrase> getEffectPhraseList() {
-		return effectPhraseList;
+	
+	public Phrase getEffectPhrase() {
+		return effectPhrase;
 	}
-
-
-	public void setEffectPhraseList(ArrayList<Phrase> effectPhraseList) {
-		this.effectPhraseList = effectPhraseList;
+	
+	public void setEffectPhrase(Phrase effectPhrase) {
+		this.effectPhrase = effectPhrase;
 	}
+	
+
 	
 	
 	

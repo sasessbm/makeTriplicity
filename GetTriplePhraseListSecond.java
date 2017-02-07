@@ -8,7 +8,7 @@ public class GetTriplePhraseListSecond {
 	private static  ArrayList<Phrase> phraseList;
 	private static ArrayList<String> evaldicList = 
 			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\EVALDIC_ver1.01");
-	private static TriplePhrase triplePhrase;
+	//private static TriplePhrase triplePhrase;
 
 	public static ArrayList<TriplePhrase> getTriplePhrase(ArrayList<Phrase> phraseList) {
 
@@ -16,66 +16,86 @@ public class GetTriplePhraseListSecond {
 		GetTriplePhraseListSecond.phraseList = phraseList;
 
 		ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
-		triplePhrase = new TriplePhrase();
-		ArrayList<Phrase> effectPhraseList = new ArrayList<Phrase>();
-		ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
+		
+		//ArrayList<Phrase> effectPhraseList = new ArrayList<Phrase>();
+		//ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 
 		for(int phraseIndex = 1; phraseIndex < phraseList.size(); phraseIndex++){
+			
+			TriplePhrase triplePhrase = new TriplePhrase();
+			Phrase phrase = phraseList.get(phraseIndex);
 
-			ArrayList<Morpheme> morphemeList = phraseList.get(phraseIndex).getMorphemeList();
+			ArrayList<Morpheme> morphemeList = phrase.getMorphemeList();
 
 			for(int morphemeIndex = 0; morphemeIndex < morphemeList.size(); morphemeIndex++){
 				for(String evalWord : evaldicList){
+					
+					Morpheme morpheme = morphemeList.get(morphemeIndex);
 
 					//評価表現でない場合
-					if(!morphemeList.get(morphemeIndex).getOriginalForm().contains(evalWord)){ continue; }
+					if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
 					
-					phraseList.get(phraseIndex).setEvalWord(morphemeList.get(morphemeIndex).getMorphemeText());
+					//phrase.setEvalWord(morpheme.getMorphemeText());
+					//effectPhraseList.add(phrase);
+					System.out.println("phrase" + phrase.getPhraseText());
+					triplePhrase.setEffectPhrase(phrase);
 
-					judgeTargetPhrase(phraseList.get(phraseIndex).getId());
-
+					judgeTargetPhrase(phrase.getId(), triplePhrase);
+					
 				}
-
 			}
 			
-			effectPhraseList.add(phraseList.get(phraseIndex));
-			triplePhrase.setEffectPhraseList(effectPhraseList);
-
+			if(triplePhrase.getTargetPhrase() == null || triplePhrase.getEffectPhrase() == null){
+				continue;
+			}
+			
+			triplePhraseList.add(triplePhrase);
+			//if(phrase.getEvalWordList().size()!=0){
+				//effectPhraseList.add(phrase);
+				//triplePhrase.setEffectPhraseList(effectPhraseList);
+				//triplePhraseList.add(triplePhrase);
+			//}
+			
+			
 		}
-		triplePhraseList.add(triplePhrase);
-
 		return triplePhraseList;
 	}
 
 	//「対象」要素存在文節判定
-	public static void judgeTargetPhrase(int id){
+	public static void judgeTargetPhrase(int id, TriplePhrase triplePhrase){
 
 		boolean findPhrase = false;
-		ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
+		//ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
+		String targetText = "";
 
 		//逆から探索
 		for(int i=1; i<=phraseList.size(); i++){
 			int currentIndex = phraseList.size()-i;
+			Phrase phrase = phraseList.get(currentIndex);
 
-			if(phraseList.get(currentIndex).getDependencyIndex() == id || findPhrase){
+			if(phrase.getDependencyIndex() == id || findPhrase){
 
-				String lastMorphemeText = phraseList.get(currentIndex).getMorphemeList()
-						.get(phraseList.get(currentIndex).getMorphemeList().size()-1)
+				String lastMorphemeText = phrase.getMorphemeList()
+						.get(phrase.getMorphemeList().size()-1)
 						.getMorphemeText();
 
 				if(findPhrase){
 					if(lastMorphemeText.equals("の")){
-						targetPhraseList.add(phraseList.get(currentIndex));
+						//targetPhraseList.add(phraseList.get(currentIndex));
+						targetText = phrase.getPhraseText() + targetText;
 					}else{
-						Collections.reverse(targetPhraseList);
-						triplePhrase.setTargetPhraseList(targetPhraseList);
+						//Collections.reverse(targetPhraseList);
+						phrase.setPhraseText(targetText);
+						//targetPhraseList.add(phrase);
+						triplePhrase.setTargetPhrase(phrase);
 						break;
 					}
 				}else{
 					if(lastMorphemeText.equals("が") || lastMorphemeText.equals("は") 
 							|| lastMorphemeText.equals("を") || lastMorphemeText.equals("も")){
 						findPhrase = true;
-						targetPhraseList.add(phraseList.get(currentIndex));
+						//targetPhraseList.add(phraseList.get(currentIndex));
+						targetText = phrase.getPhraseText();
 					}
 				}
 
