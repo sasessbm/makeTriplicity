@@ -11,7 +11,7 @@ public class MakeTripleSet {
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
 		int startRecordNum = 0;
-		int endRecordNum = 50;
+		int endRecordNum = 2;
 		int getTripleSetNum = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -86,75 +86,39 @@ public class MakeTripleSet {
 				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 				ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				
-				//TriplePhrase triplePhrase = GetTriplePhaseFirst.getTriplePhrase(phraseList);
+				if(triplePhraseList.size() == 0){ continue; }
+				getSentenceNumOfTriple++;
 				
-				if(triplePhraseList.size() != 0){
 					System.out.println("------------------------------------------------------------------------------------");
-					System.out.println("triplePhraseList.size():" + triplePhraseList.size());
-					//System.out.println("triplePhraseListの効果:" + triplePhraseList.get(0).getEffectPhraseList().get(0).getPhraseText());
 					System.out.print("\r\nId:" +record.getId());
 					System.out.print(" | 性別:" +record.getSex());
 					System.out.print(" | 年齢:" +record.getAge());
 					System.out.println(" | 病名:" +record.getDiseaseName());
 					System.out.println("\r\n文: " + sentenceTextBefore);
-				}
 				
 				for(TriplePhrase triplePhrase : triplePhraseList){
 					
-//					if(triplePhrase.getTargetPhraseList().size() == 0 || triplePhrase.getEffectPhraseList().size() == 0){
-//						continue;
-//					}
-					
-					if(triplePhrase.getTargetPhrase().getPhraseText() == null || 
-							triplePhrase.getEffectPhrase().getPhraseText() == null){
-						continue;
-					}
+					ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
+					targetPhraseList = triplePhrase.getTargetPhraseList();
 					
 					//薬剤名セット
 					triplePhrase.setMedicineName(medicineName);
-					Phrase targetPhrase = triplePhrase.getTargetPhrase();
 					Phrase effectPhrase = triplePhrase.getEffectPhrase();
-					targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+					for(Phrase targetPhrase : targetPhraseList){
+						targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+					}
+					
 					effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
-					
-//					for(Phrase phrase : triplePhrase.getTargetPhraseList()){
-//						phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
-//						for(Morpheme morpheme : phrase.getMorphemeList()){
-//							morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
-//						}
-//					}
-//					
-//					for(Phrase phrase : triplePhrase.getEffectPhraseList()){
-//						phrase.setPhraseText(phrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
-//						for(Morpheme morpheme : phrase.getMorphemeList()){
-//							morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
-//						}
-//					}
-					
 					ArrayList<TripleSet> tripleSetList = GetTripleSetSecond.getTripleSetList(triplePhrase);
-					
-//					for(Phrase phrase : triplePhrase.getTargetPhraseList()){
-//						System.out.println("対象文節リスト: " + phrase.getPhraseText());
-//					}
-//					for(Phrase phrase : triplePhrase.getEffectPhraseList()){
-//						System.out.println("効果文節リスト: " + phrase.getPhraseText());
-//					}
-					
 					for(TripleSet tripleSet : tripleSetList){
-						
 						System.out.println("薬剤名: " + triplePhrase.getMedicineName());
 						System.out.println("対象: " + tripleSet.getTarget());
 						System.out.println("効果: " + tripleSet.getEffect());
 						getTripleSetNum++;
 					}
-					
-					getSentenceNumOfTriple++;
 				}
 				
-				
 			}
-
-
 		}
 		
 		System.out.println("------------------------------------------------------------------------------------");

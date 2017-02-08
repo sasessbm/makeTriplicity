@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class TriplePhrase {
 	
 	private String medicineName;
-	private Phrase targetPhrase;
+	private ArrayList<Phrase> targetPhraseList;
 	private Phrase effectPhrase;
 	
 	public TriplePhrase() {
@@ -20,14 +20,14 @@ public class TriplePhrase {
 		this.medicineName = medicineName;
 	}
 	
-	public Phrase getTargetPhrase() {
-		return targetPhrase;
+	public ArrayList<Phrase> getTargetPhraseList() {
+		return targetPhraseList;
 	}
-	
-	public void setTargetPhrase(Phrase targetPhrase) {
-		this.targetPhrase = targetPhrase;
+
+	public void setTargetPhraseList(ArrayList<Phrase> targetPhraseList) {
+		this.targetPhraseList = targetPhraseList;
 	}
-	
+
 	public Phrase getEffectPhrase() {
 		return effectPhrase;
 	}

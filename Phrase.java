@@ -19,6 +19,10 @@ public class Phrase {
 		this.evalWordList = new ArrayList<String>();
 	}
 	
+	public Phrase(){
+		
+	}
+	
 	public int getId() {
 		return id;
 	}
