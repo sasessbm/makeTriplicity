@@ -10,8 +10,8 @@ public class MakeTripleSet {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 0;
-		int endRecordNum = 2;
+		int startRecordNum = 830;
+		int endRecordNum = 830;
 		int getTripleSetNum = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -48,6 +48,7 @@ public class MakeTripleSet {
 				if(!sentenceText.contains(medicineName)){ continue; }
 				
 				sentenceTextBefore = sentenceText;
+				System.out.println("\r\n文: " + sentenceTextBefore);
 
 				//前処理
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
@@ -66,25 +67,26 @@ public class MakeTripleSet {
 				int indexPhrase = -1;
 				//System.out.println("\r\n以下、文節単位");
 
-				//文節単位
-				//				for(Phrase phrase : phraseList){
-				//					System.out.println("---------------------------------------------------");
-				//					indexPhrase ++;
-				//					System.out.println("\r\n文節" + indexPhrase);
-				//					System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
-				//					System.out.println("\r\n以下、形態素単位");
-				//					
-				//					//形態素単位
-				//					for(Morpheme morpheme : phrase.getMorphemeList()){
-				//						System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
-				//						
-				//					}
-				//				}
+//				//文節単位
+//								for(Phrase phrase : phraseList){
+//									System.out.println("---------------------------------------------------");
+//									indexPhrase ++;
+//									System.out.println("\r\n文節" + indexPhrase);
+//									System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
+//									System.out.println("\r\n以下、形態素単位");
+//									
+//									//形態素単位
+//									for(Morpheme morpheme : phrase.getMorphemeList()){
+//										System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
+//										
+//									}
+//								}
 
 				//System.out.println("\r\nId:" +record.getId());
 				//System.out.println("\r\n文:" + sentenceTextBefore);
-				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
-				ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
+				ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
+				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
+				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListTest.getTriplePhrase(phraseList);
 				
 				if(triplePhraseList.size() == 0){ continue; }
 				getSentenceNumOfTriple++;
