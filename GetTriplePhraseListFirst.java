@@ -18,61 +18,51 @@ public class GetTriplePhraseListFirst {
 		GetTriplePhraseListFirst.phraseList = phraseList;
 
 		for(Phrase phrase : phraseList){
-			
+
 			triplePhrase = new TriplePhrase();
 			String phraseText = phrase.getPhraseText();
 			if(!phraseText.contains("TARGETMEDICINE")){ continue; }
-			System.out.println(phraseText);
+			//System.out.println(phraseText);
 
 			//対象薬剤名のすぐ後ろに手がかり語があるか探索
 			int keywordIndex = isExistKeyword(phrase.getMorphemeList());
 			ArrayList<Morpheme> morphemeList = phrase.getMorphemeList();
 			int medicineIndex = -1;
-			
+
 			for(int i = 0; i<morphemeList.size(); i++){
-				if(morphemeList.get(i).getMorphemeText().equals("TARGETMEDICINE")){
-					medicineIndex = i;
-					break;
-				}
+				if(!morphemeList.get(i).getMorphemeText().contains("TARGETMEDICINE")){ continue; }
+				medicineIndex = i;
+				break;
 			}
-			
-//			for(Morpheme morpheme : morphemeList){
-//				medicineIndex++;
-//				if(morpheme.getMorphemeText().equals("TARGETMEDICINE")){
-//					break;
-//				}
-//			}
-			
+
+			if(medicineIndex == -1){ continue; }
+
 			//同じ文節内にある
 			if(keywordIndex > 0){
-				if(morphemeList.get(keywordIndex-1).getMorphemeText().equals("TARGETMEDICINE")){
-					System.out.println("自身のIDを渡す");
-					//自身のIDを渡す
-					judgeKeywordPhrase(phrase.getId());
-				}
-
+				if((keywordIndex - 1) != medicineIndex){ continue; }
+				//System.out.println("自身のIDを渡す");
+				//自身のIDを渡す
+				judgeKeywordPhrase(phrase.getId());
 			}
-			
+
 			//同じ文節内にはないが、「対象薬剤名＋助詞」になっている
 			else{
-				if(medicineIndex != -1){
-					if(morphemeList.get(medicineIndex+1).getPartOfSpeech().equals("助詞")){
-						//係り先番号を渡す
-						System.out.println("係り先番号を渡す");
-						System.out.println(phrase.getPhraseText());
-						judgeKeywordPhrase(phrase.getDependencyIndex());
-					}
-				}
+				if(morphemeList.size() <= medicineIndex + 1){ continue; }
+				//if(!morphemeList.get(medicineIndex + 1).getPartOfSpeech().equals("助詞")){ continue; }
+				if(!morphemeList.get(morphemeList.size()-1).getPartOfSpeech().equals("助詞")){ continue; }
+				//係り先番号を渡す
+				//System.out.println("係り先番号を渡す");
+				//System.out.println(phrase.getPhraseText());
+				judgeKeywordPhrase(phrase.getDependencyIndex());
 			}
-			
+
 			if(triplePhrase.getEffectPhrase() == null || triplePhrase.getTargetPhraseList() == null){
-				System.out.println("continue");
+				//System.out.println("continue");
 				continue;
 			}
-			
+
 			triplePhraseList.add(triplePhrase);
 		}
-
 		
 		return triplePhraseList;
 	}
@@ -86,7 +76,6 @@ public class GetTriplePhraseListFirst {
 		for(Morpheme morpheme : morphemeList){
 			morphemeIndex ++;
 			String originalForm = morpheme.getOriginalForm();
-			//System.out.println("originalForm:" + originalForm);
 			for(String keyword : keywordList){
 				if(originalForm.equals(keyword)){
 					keywordIndex = morphemeIndex;
@@ -100,7 +89,7 @@ public class GetTriplePhraseListFirst {
 	public static void judgeKeywordPhrase(int dependencyIndex){
 
 		for(Phrase phrase : phraseList){
-			
+
 			if(phrase.getId() != dependencyIndex){ continue; }
 			if(isExistKeyword(phrase.getMorphemeList()) != -1){
 
@@ -109,7 +98,7 @@ public class GetTriplePhraseListFirst {
 						.get(phrase.getMorphemeList().size()-1).getPartOfSpeechDetails();
 				if(partOfSpeechDetails.contains("格助詞") || partOfSpeechDetails.contains("接続助詞")){
 					//phrase.setPhraseType("Keyword");
-					System.out.println("手がかり語存在文節:"+ phrase.getPhraseText());
+					//System.out.println("手がかり語存在文節:"+ phrase.getPhraseText());
 					judgeEffectPhrase(phrase.getDependencyIndex());
 					break;
 				}
@@ -129,7 +118,7 @@ public class GetTriplePhraseListFirst {
 				//effectPhraseList.add(phrase);
 				//triplePhrase.setEffectPhraseList(effectPhraseList);
 				triplePhrase.setEffectPhrase(phrase);
-				System.out.println("「効果」要素存在文節:"+ phrase.getPhraseText());
+				//System.out.println("「効果」要素存在文節:"+ phrase.getPhraseText());
 				//phrase.setPhraseType("Effect");
 				judgeTargetPhrase(phrase.getId());
 				break;

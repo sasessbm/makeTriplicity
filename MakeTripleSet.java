@@ -10,8 +10,8 @@ public class MakeTripleSet {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 830;
-		int endRecordNum = 830;
+		int startRecordNum = 0;
+		int endRecordNum = 6000;
 		int getTripleSetNum = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -48,11 +48,12 @@ public class MakeTripleSet {
 				if(!sentenceText.contains(medicineName)){ continue; }
 				
 				sentenceTextBefore = sentenceText;
-				System.out.println("\r\n文: " + sentenceTextBefore);
+				//System.out.println("\r\n文: " + sentenceTextBefore);
 
 				//前処理
 				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
+				sentenceText = Preprocessor.deleteSpace(sentenceText);
 				
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }

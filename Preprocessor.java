@@ -3,10 +3,19 @@ package makeTriplicity;
 import java.util.ArrayList;
 
 public class Preprocessor {
+	
+	public static String deleteSpace(String sentenceText){
+		//半角
+		sentenceText = sentenceText.replace(" ", "");
+		//全角
+		sentenceText = sentenceText.replace("　", "");
+		
+		return sentenceText;
+	}
 
 	//文単位に区切る & sentenceオブジェクト生成
 	public static ArrayList<String> getSentenceTextList(String snippetText){
-		
+
 		ArrayList<String> sentenceTextList = new ArrayList<String>();
 		int indexStart = -1;
 		int indexPeriod = -1;
@@ -17,7 +26,7 @@ public class Preprocessor {
 			sentenceTextList.add(snippetText.substring(indexStart + 1, indexPeriod));
 			indexStart = indexPeriod;
 		}
-		
+
 		return sentenceTextList;
 	}
 
@@ -26,7 +35,7 @@ public class Preprocessor {
 
 		ArrayList<String> medicineNameList = new ArrayList<String>();
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
-		
+
 		if(sentenceText.contains(targetMediceneName)){
 			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
 		}
@@ -41,7 +50,7 @@ public class Preprocessor {
 
 	//薬剤名を含まない()削除
 	public static String deleteParentheses(String sentenceText){
-		
+
 		//半角
 		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"(" , ")");
 		//全角
@@ -50,20 +59,20 @@ public class Preprocessor {
 		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"(" , "）");
 		//全角＋半角
 		sentenceText = deleteTextBetweenTwoCharacer(sentenceText ,"（" , ")");
-		
+
 		return sentenceText;
-		
+
 	}
-	
+
 	public static String deleteTextBetweenTwoCharacer(String sentenceText, String firstCharacter, String secondCharacter){
-		
+
 		String textBetweenTwoCharacter = "";
 		int indexStart = -1;
 		int indexFirstCharacter = -1;
 		int indexSecondCharacter = -1;
-		
+
 		while (true){
-			
+
 			indexFirstCharacter = sentenceText.indexOf(firstCharacter, indexStart + 1);
 			indexSecondCharacter = sentenceText.indexOf(secondCharacter, indexStart + 1);
 			if(indexFirstCharacter == -1 || indexSecondCharacter == -1){ break; }
@@ -72,13 +81,11 @@ public class Preprocessor {
 				if(!textBetweenTwoCharacter.contains("MEDICINE")){
 					sentenceText = sentenceText.replace(textBetweenTwoCharacter, "");
 				}
-				
+
 			}
 			indexStart = indexSecondCharacter;
 		}
-	
-	return sentenceText;
-		
+		return sentenceText;	
 	}
 
 

@@ -34,7 +34,7 @@ public class GetTriplePhraseListSecond {
 					Morpheme morpheme = morphemeList.get(morphemeIndex);
 
 					//評価表現でない場合
-					if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
+					if(!morpheme.getOriginalForm().contains(evalWord)){ continue; }
 					
 					ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 					targetPhraseList =	judgeTargetPhrase(phrase.getId());
