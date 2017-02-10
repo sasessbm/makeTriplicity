@@ -35,6 +35,7 @@ public class GetTriplePhraseListSecond {
 
 					//評価表現でない場合
 					if(!morpheme.getOriginalForm().contains(evalWord)){ continue; }
+					//if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
 					
 					ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 					targetPhraseList =	judgeTargetPhrase(phrase.getId());
@@ -42,6 +43,7 @@ public class GetTriplePhraseListSecond {
 					if(targetPhraseList.size() == 0){ continue; }
 					triplePhrase.setTargetPhraseList(targetPhraseList);
 					triplePhrase.setEffectPhrase(phrase);
+					//System.out.println("評価表現:" + evalWord);
 //					for(Phrase targetPhrase : targetPhraseList){
 //						System.out.println("対象::" + targetPhrase.getPhraseText());
 //					}

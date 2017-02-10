@@ -22,12 +22,12 @@ public class GetTripleSetFirst {
 			}
 		}
 		
-		for(Phrase phrase : triplePhrase.getEffectPhraseList()){
-			for(Morpheme morpheme : phrase.getMorphemeList()){
-				effectMorphemeList.add(morpheme);
-				effect += morpheme.getMorphemeText();
-			}
-		}
+//		for(Phrase phrase : triplePhrase.getEffectPhrase()){
+//			for(Morpheme morpheme : phrase.getMorphemeList()){
+//				effectMorphemeList.add(morpheme);
+//				effect += morpheme.getMorphemeText();
+//			}
+//		}
 		
 		//target = getAttribute(targetMorphemeList);
 		//effect = getAttribute(effectMorphemeList);

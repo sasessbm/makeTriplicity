@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Preprocessor {
 	
 	public static String deleteSpace(String sentenceText){
+		
 		//半角
 		sentenceText = sentenceText.replace(" ", "");
 		//全角
