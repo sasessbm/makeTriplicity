@@ -29,7 +29,8 @@ public class GetTripleSetFirst {
 //			}
 //		}
 		
-		//target = getAttribute(targetMorphemeList);
+		target = getAttribute(targetMorphemeList);
+		effect = triplePhrase.getEffectPhrase().getPhraseText();
 		//effect = getAttribute(effectMorphemeList);
 		
 		tripleSet.setMedicineName(medicineName);
@@ -60,6 +61,7 @@ public class GetTripleSetFirst {
 //			if((morpheme.getPartOfSpeech().equals("助詞") || morpheme.getPartOfSpeech().equals("助動詞")) 
 //					& !morpheme.getOriginalForm().equals("の")){ break; }
 			
+			//助詞が出現
 			if(morpheme.getPartOfSpeech().equals("助詞") 
 					& !morpheme.getOriginalForm().equals("の")){ break; }
 			

@@ -6,12 +6,15 @@ import test.CaboChaTest3;
 
 public class MakeTripleSet {
 
+	private static ArrayList<String> targetFilteringList = 
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110.txt");
+
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
 		int startRecordNum = 0;
-		int endRecordNum = 100;
+		int endRecordNum = 300;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -88,19 +91,50 @@ public class MakeTripleSet {
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListTest.getTriplePhrase(phraseList);
+				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
-					tripleSetCount += makeTriplePhrase(record, sentenceTextBefore, triplePhraseListFirst, medicineName);
-					System.out.println("\r\n提案手法から取得");
-					getSentenceNumOfTriple++;
-					continue;
+
+					for(TriplePhrase triplePhrase : triplePhraseListFirst){
+
+						TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
+
+						//110番辞書フィルタ
+						if(!filterTarget(tripleSet)){ continue; }
+
+						tripleSetListFirst.add(tripleSet);
+					}
+
+					if(tripleSetListFirst.size() != 0){
+						display(record, sentenceTextBefore, tripleSetListFirst);
+						System.out.println("\r\n提案手法から取得");
+						getSentenceNumOfTriple++;
+						tripleSetCount += tripleSetListFirst.size();
+					}
 				}
-				
+
 				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
+
 				if(triplePhraseListSecond.size() == 0){ continue; }
-				tripleSetCount += makeTriplePhrase(record, sentenceTextBefore, triplePhraseListSecond, medicineName);
-				System.out.println("\r\nベースライン２から取得");
-				getSentenceNumOfTriple++;
+
+				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
+
+				for(TriplePhrase triplePhrase : triplePhraseListSecond){
+
+					TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
+
+					//110番辞書フィルタ
+					if(!filterTarget(tripleSet)){ continue; }
+
+					tripleSetListSecond.add(tripleSet);
+				}
+
+				if(tripleSetListSecond.size() != 0){
+					display(record, sentenceTextBefore, tripleSetListSecond);
+					System.out.println("\r\nベースライン２から取得");
+					getSentenceNumOfTriple++;
+					tripleSetCount += tripleSetListSecond.size();
+				}
 
 			}
 		}
@@ -117,18 +151,34 @@ public class MakeTripleSet {
 		ArrayList<Phrase> targetPhraseList = triplePhrase.getTargetPhraseList();
 		Phrase effectPhrase = triplePhrase.getEffectPhrase();
 		for(Phrase targetPhrase : targetPhraseList){
+			for(Morpheme morpheme : targetPhrase.getMorphemeList()){
+				if(!morpheme.getMorphemeText().equals("TARGETMEDICINE")){ continue; }
+				morpheme.setMorphemeText(medicineName);
+			}
 			targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
 		}
 		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
 		return triplePhrase;
 	}
-	
-	//三つ組作成＆表示
-	public static int makeTriplePhrase(Record record, String sentenceTextBefore, 
-			ArrayList<TriplePhrase> triplePhraseList, String medicineName){
-		
-		int tripleSetCount = 0;
-		
+
+	public static TripleSet makeTripleSet(TriplePhrase triplePhrase, String medicineName){
+
+		//薬剤名セット
+		triplePhrase.setMedicineName(medicineName);
+
+		//薬剤名置き換え
+		triplePhrase = replaceMedicineName(triplePhrase , medicineName);
+
+		//三つ組取得
+		//ArrayList<TripleSet> tripleSetList = GetTripleSetSecond.getTripleSetList(triplePhrase);
+		TripleSet tripleSet = GetTripleSetFirst.getTripleSet(triplePhrase);
+
+		return tripleSet;
+	}
+
+	//情報表示
+	public static void display(Record record, String sentenceTextBefore, ArrayList<TripleSet> tripleSetList){
+
 		//ステータス表示
 		System.out.println("------------------------------------------------------------------------------------");
 		System.out.print("\r\nId:" +record.getId());
@@ -136,28 +186,30 @@ public class MakeTripleSet {
 		System.out.print(" | 年齢:" +record.getAge());
 		System.out.println(" | 病名:" +record.getDiseaseName());
 		System.out.println("\r\n文: " + sentenceTextBefore);
-		
-		for(TriplePhrase triplePhrase : triplePhraseList){
 
-			//薬剤名セット
-			triplePhrase.setMedicineName(medicineName);
+		//三つ組表示
+		for(TripleSet tripleSet : tripleSetList){
+			System.out.println("\r\n薬剤名: " + tripleSet.getMedicineName());
+			System.out.println("対象: " + tripleSet.getTarget());
+			System.out.println("効果: " + tripleSet.getEffect());
+		}
 
-			//薬剤名置き換え
-			replaceMedicineName(triplePhrase,medicineName);
+	}
 
-			//三つ組取得
-			ArrayList<TripleSet> tripleSetList = GetTripleSetSecond.getTripleSetList(triplePhrase);
+	//110番辞書フィルタ
+	public static boolean filterTarget(TripleSet tripleSet){
 
-			//三つ組表示
-			for(TripleSet tripleSet : tripleSetList){
-				System.out.println("\r\n薬剤名: " + triplePhrase.getMedicineName());
-				System.out.println("対象: " + tripleSet.getTarget());
-				System.out.println("効果: " + tripleSet.getEffect());
-				tripleSetCount++;
+		boolean existInTargetFilteringList = false;
+
+		String targetWord = tripleSet.getTarget();
+
+		for(String dicWord : targetFilteringList){
+			if(targetWord.equals(dicWord)){
+				existInTargetFilteringList = true;
 			}
 		}
-		
-		return tripleSetCount;
+
+		return existInTargetFilteringList;
 	}
 
 }

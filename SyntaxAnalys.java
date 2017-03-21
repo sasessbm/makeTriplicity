@@ -8,12 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
-import test.CaboChaTest3;
-
 public class SyntaxAnalys {
 
 //	public static ArrayList<Phrase> getPhraseList(Sentence sentence) throws SAXException, IOException, ParserConfigurationException {
