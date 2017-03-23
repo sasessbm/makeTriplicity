@@ -4,16 +4,14 @@ import java.util.ArrayList;
 
 import test.CaboChaTest3;
 
-public class MakeTripleSet {
-
-	
+public class Main {
 
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 0;
-		int endRecordNum = 100;
+		int startRecordNum = 1000;
+		int endRecordNum = 1500;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -142,7 +140,7 @@ public class MakeTripleSet {
 		//薬剤名置き換え
 		triplePhrase = replaceMedicineName(triplePhrase , medicineName);
 		//三つ組取得
-		TripleSet tripleSet = GetTripleSetFirst.getTripleSet(triplePhrase);
+		TripleSet tripleSet = GetTripleSet.getTripleSet(triplePhrase);
 
 		return tripleSet;
 	}
