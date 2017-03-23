@@ -2,46 +2,38 @@ package makeTriplicity;
 
 public class TripleSet {
 	
-	private String medicineName;
-	private String target;
-	private String effect;
-	
-	
+	String medicineName;
+	private Element targetElement;
+	private Element effectElement;
+
+
 	public TripleSet() {
 		
 	}
-
+	
 
 	public String getMedicineName() {
 		return medicineName;
 	}
 
-
 	public void setMedicineName(String medicineName) {
 		this.medicineName = medicineName;
 	}
 
-
-	public String getTarget() {
-		return target;
+	public Element getTargetElement() {
+		return targetElement;
 	}
 
-
-	public void setTarget(String target) {
-		this.target = target;
+	public void setTargetElement(Element targetElement) {
+		this.targetElement = targetElement;
 	}
 
-
-	public String getEffect() {
-		return effect;
+	public Element getEffectElement() {
+		return effectElement;
 	}
 
-
-	public void setEffect(String effect) {
-		this.effect = effect;
+	public void setEffectElement(Element effectElement) {
+		this.effectElement = effectElement;
 	}
 	
-	
-	
-
 }

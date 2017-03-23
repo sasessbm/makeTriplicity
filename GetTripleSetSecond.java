@@ -25,8 +25,8 @@ public class GetTripleSetSecond {
 		effect = triplePhrase.getEffectPhrase().getPhraseText();
 
 		tripleSet.setMedicineName(medicineName);
-		tripleSet.setTarget(target.replace("、", ""));
-		tripleSet.setEffect(effect.replace("、", ""));
+		//tripleSet.setTarget(target.replace("、", ""));
+		//tripleSet.setEffect(effect.replace("、", ""));
 		tripleSetList.add(tripleSet);
 
 		return tripleSetList;

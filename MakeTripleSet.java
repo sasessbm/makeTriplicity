@@ -6,15 +6,14 @@ import test.CaboChaTest3;
 
 public class MakeTripleSet {
 
-	private static ArrayList<String> targetFilteringList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110.txt");
+	
 
 	public static void main(String[] args) throws Exception {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
 		int startRecordNum = 0;
-		int endRecordNum = 300;
+		int endRecordNum = 1000;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -100,7 +99,8 @@ public class MakeTripleSet {
 						TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
 
 						//110番辞書フィルタ
-						if(!filterTarget(tripleSet)){ continue; }
+						//if(!filterTarget(tripleSet)){ continue; }
+						if(!Filtering.filterTarget(tripleSet)){ continue; }
 
 						tripleSetListFirst.add(tripleSet);
 					}
@@ -124,7 +124,8 @@ public class MakeTripleSet {
 					TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
 
 					//110番辞書フィルタ
-					if(!filterTarget(tripleSet)){ continue; }
+					//if(!filterTarget(tripleSet)){ continue; }
+					if(!Filtering.filterTarget(tripleSet)){ continue; }
 
 					tripleSetListSecond.add(tripleSet);
 				}
@@ -190,26 +191,9 @@ public class MakeTripleSet {
 		//三つ組表示
 		for(TripleSet tripleSet : tripleSetList){
 			System.out.println("\r\n薬剤名: " + tripleSet.getMedicineName());
-			System.out.println("対象: " + tripleSet.getTarget());
-			System.out.println("効果: " + tripleSet.getEffect());
+			System.out.println("対象: " + tripleSet.getTargetElement().getText());
+			System.out.println("効果: " + tripleSet.getEffectElement().getText());
 		}
-
 	}
-
-	//110番辞書フィルタ
-	public static boolean filterTarget(TripleSet tripleSet){
-
-		boolean existInTargetFilteringList = false;
-
-		String targetWord = tripleSet.getTarget();
-
-		for(String dicWord : targetFilteringList){
-			if(targetWord.equals(dicWord)){
-				existInTargetFilteringList = true;
-			}
-		}
-
-		return existInTargetFilteringList;
-	}
-
+	
 }

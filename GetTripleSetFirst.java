@@ -9,16 +9,16 @@ public class GetTripleSetFirst {
 		TripleSet tripleSet = new TripleSet();
 		
 		String medicineName = triplePhrase.getMedicineName();
-		String target = "";
-		String effect = "";
+		Element targetElement = new Element();
+		Element effectElement = new Element();
 		
 		ArrayList<Morpheme> targetMorphemeList = new ArrayList<Morpheme>();
-		ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
+		//ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
 		
 		for(Phrase phrase : triplePhrase.getTargetPhraseList()){
 			for(Morpheme morpheme : phrase.getMorphemeList()){
 				targetMorphemeList.add(morpheme);
-				target += morpheme.getMorphemeText();
+				//target += morpheme.getMorphemeText();
 			}
 		}
 		
@@ -29,20 +29,26 @@ public class GetTripleSetFirst {
 //			}
 //		}
 		
-		target = getAttribute(targetMorphemeList);
-		effect = triplePhrase.getEffectPhrase().getPhraseText();
+		targetElement = getElement(targetMorphemeList);
+		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText());
 		//effect = getAttribute(effectMorphemeList);
 		
 		tripleSet.setMedicineName(medicineName);
-		tripleSet.setTarget(target.replace("、", ""));
-		tripleSet.setEffect(effect.replace("、", ""));
+		tripleSet.setTargetElement(targetElement);
+		tripleSet.setEffectElement(effectElement);
+		
+		
+		//tripleSet.setTarget(target.replace("、", ""));
+		//tripleSet.setEffect(effect.replace("、", ""));
 		
 		return tripleSet;
 	}
 	
-	public static String getAttribute(ArrayList<Morpheme> morphemeList){
+	public static Element getElement(ArrayList<Morpheme> morphemeList){
 		
-		String attribute = "";
+		Element element = new Element();
+		String text = "";
+		ArrayList<Morpheme> elementMorphemeList = new ArrayList<Morpheme>();
 		int denialIndex = 0;
 		int morphemeIndex = 0;
 		
@@ -68,14 +74,18 @@ public class GetTripleSetFirst {
 			if(morpheme.getPartOfSpeech().equals("動詞")){
 				
 				if(denialIndex % 2 == 1 || morphemeIndex != morphemeList.size()){
-					attribute += morpheme.getMorphemeText(); 
+					text += morpheme.getMorphemeText(); 
+					elementMorphemeList.add(morpheme);
+					
 				}else{
 					//動詞は原形で取得
-					attribute += morpheme.getOriginalForm();
+					text += morpheme.getOriginalForm();
+					elementMorphemeList.add(morpheme);
 				}
 				 
 			}else{
-				attribute += morpheme.getMorphemeText(); 
+				text += morpheme.getMorphemeText(); 
+				elementMorphemeList.add(morpheme);
 			}
 		}
 		
@@ -83,7 +93,12 @@ public class GetTripleSetFirst {
 //			attribute += "ない";
 //		}
 		
-		return attribute;
+		
+		element.setText(text);
+		element.setMorphemeList(elementMorphemeList);
+		
+		
+		return element;
 	}
 
 }

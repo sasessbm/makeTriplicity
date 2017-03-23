@@ -43,7 +43,8 @@ public class GetTriplePhraseListSecond {
 					if(targetPhraseList.size() == 0){ continue; }
 					triplePhrase.setTargetPhraseList(targetPhraseList);
 					triplePhrase.setEffectPhrase(phrase);
-					//System.out.println("評価表現:" + evalWord);
+//					System.out.println("評価表現:" + evalWord);
+//					System.out.println("原形:" + morpheme.getOriginalForm());
 //					for(Phrase targetPhrase : targetPhraseList){
 //						System.out.println("対象::" + targetPhrase.getPhraseText());
 //					}
