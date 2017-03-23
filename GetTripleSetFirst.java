@@ -30,7 +30,7 @@ public class GetTripleSetFirst {
 //		}
 		
 		targetElement = getElement(targetMorphemeList);
-		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText());
+		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText().replace("、", ""));
 		//effect = getAttribute(effectMorphemeList);
 		
 		tripleSet.setMedicineName(medicineName);
@@ -58,8 +58,6 @@ public class GetTripleSetFirst {
 				denialIndex ++;
 			}
 		}
-		
-		//System.out.println(denialIndex);
 		
 		for(Morpheme morpheme : morphemeList){
 			morphemeIndex++;
@@ -93,10 +91,8 @@ public class GetTripleSetFirst {
 //			attribute += "ない";
 //		}
 		
-		
-		element.setText(text);
+		element.setText(text.replace("、", ""));
 		element.setMorphemeList(elementMorphemeList);
-		
 		
 		return element;
 	}

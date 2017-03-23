@@ -13,7 +13,7 @@ public class MakeTripleSet {
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
 		int startRecordNum = 0;
-		int endRecordNum = 1000;
+		int endRecordNum = 100;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -36,12 +36,10 @@ public class MakeTripleSet {
 			//SentenceList取得
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
 			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
-			int indexSentence = 0;
 
 			String sentenceTextBefore = "";
 			//文単位
 			for(String sentenceText : sentenceTextList){
-				indexSentence++;
 
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
@@ -67,7 +65,6 @@ public class MakeTripleSet {
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
-				int indexPhrase = -1;
 				//System.out.println("\r\n以下、文節単位");
 
 				//				//文節単位
@@ -93,42 +90,22 @@ public class MakeTripleSet {
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
-
-					for(TriplePhrase triplePhrase : triplePhraseListFirst){
-
-						TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
-
-						//110番辞書フィルタ
-						//if(!filterTarget(tripleSet)){ continue; }
-						if(!Filtering.filterTarget(tripleSet)){ continue; }
-
-						tripleSetListFirst.add(tripleSet);
-					}
-
+					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, medicineName);
+					
 					if(tripleSetListFirst.size() != 0){
 						display(record, sentenceTextBefore, tripleSetListFirst);
 						System.out.println("\r\n提案手法から取得");
 						getSentenceNumOfTriple++;
 						tripleSetCount += tripleSetListFirst.size();
 					}
+					continue;
 				}
 
 				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
-
 				if(triplePhraseListSecond.size() == 0){ continue; }
-
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
-
-				for(TriplePhrase triplePhrase : triplePhraseListSecond){
-
-					TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
-
-					//110番辞書フィルタ
-					//if(!filterTarget(tripleSet)){ continue; }
-					if(!Filtering.filterTarget(tripleSet)){ continue; }
-
-					tripleSetListSecond.add(tripleSet);
-				}
+				
+				tripleSetListSecond = getTripleSetList(triplePhraseListSecond, medicineName);
 
 				if(tripleSetListSecond.size() != 0){
 					display(record, sentenceTextBefore, tripleSetListSecond);
@@ -136,14 +113,38 @@ public class MakeTripleSet {
 					getSentenceNumOfTriple++;
 					tripleSetCount += tripleSetListSecond.size();
 				}
-
 			}
 		}
-
 		System.out.println("------------------------------------------------------------------------------------");
 		System.out.println(getSentenceNumOfTriple + "文から");
 		System.out.println("三つ組を" + tripleSetCount +"個取得できました！！");
 		System.out.println("終了！！！");
+	}
+	
+	//三つ組リスト取得
+	public static ArrayList<TripleSet> getTripleSetList(ArrayList<TriplePhrase> triplePhraseListFirst, String medicineName){
+		
+		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
+		for(TriplePhrase triplePhrase : triplePhraseListFirst){
+			TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
+			//110番辞書フィルタ
+			if(!Filtering.filterTarget(tripleSet)){ continue; }
+			tripleSetList.add(tripleSet);
+		}
+		return tripleSetList;
+	}
+	
+	//三つ組取得
+	public static TripleSet makeTripleSet(TriplePhrase triplePhrase, String medicineName){
+
+		//薬剤名セット
+		triplePhrase.setMedicineName(medicineName);
+		//薬剤名置き換え
+		triplePhrase = replaceMedicineName(triplePhrase , medicineName);
+		//三つ組取得
+		TripleSet tripleSet = GetTripleSetFirst.getTripleSet(triplePhrase);
+
+		return tripleSet;
 	}
 
 	//薬剤名置き換え
@@ -160,21 +161,6 @@ public class MakeTripleSet {
 		}
 		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
 		return triplePhrase;
-	}
-
-	public static TripleSet makeTripleSet(TriplePhrase triplePhrase, String medicineName){
-
-		//薬剤名セット
-		triplePhrase.setMedicineName(medicineName);
-
-		//薬剤名置き換え
-		triplePhrase = replaceMedicineName(triplePhrase , medicineName);
-
-		//三つ組取得
-		//ArrayList<TripleSet> tripleSetList = GetTripleSetSecond.getTripleSetList(triplePhrase);
-		TripleSet tripleSet = GetTripleSetFirst.getTripleSet(triplePhrase);
-
-		return tripleSet;
 	}
 
 	//情報表示
