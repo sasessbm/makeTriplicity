@@ -16,12 +16,12 @@ public class GetTriplePhraseListSecond {
 		GetTriplePhraseListSecond.phraseList = phraseList;
 
 		ArrayList<TriplePhrase> triplePhraseList = new ArrayList<TriplePhrase>();
-		
+
 		//ArrayList<Phrase> effectPhraseList = new ArrayList<Phrase>();
 		//ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 
 		for(int phraseIndex = 1; phraseIndex < phraseList.size(); phraseIndex++){
-			
+
 			TriplePhrase triplePhrase = new TriplePhrase();
 			Phrase phrase = new Phrase();
 			phrase = phraseList.get(phraseIndex);
@@ -30,30 +30,32 @@ public class GetTriplePhraseListSecond {
 
 			for(int morphemeIndex = 0; morphemeIndex < morphemeList.size(); morphemeIndex++){
 				for(String evalWord : evaldicList){
-					
+
 					Morpheme morpheme = morphemeList.get(morphemeIndex);
 
 					//評価表現でない場合
 					if(!morpheme.getOriginalForm().contains(evalWord)){ continue; }
 					//if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
-					
+
 					ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 					targetPhraseList =	judgeTargetPhrase(phrase.getId());
 
 					if(targetPhraseList.size() == 0){ continue; }
 					triplePhrase.setTargetPhraseList(targetPhraseList);
 					triplePhrase.setEffectPhrase(phrase);
-//					System.out.println("評価表現:" + evalWord);
-//					System.out.println("原形:" + morpheme.getOriginalForm());
-//					for(Phrase targetPhrase : targetPhraseList){
-//						System.out.println("対象::" + targetPhrase.getPhraseText());
-//					}
+					//					System.out.println("評価表現:" + evalWord);
+					//					System.out.println("原形:" + morpheme.getOriginalForm());
+					//					for(Phrase targetPhrase : targetPhraseList){
+					//						System.out.println("対象::" + targetPhrase.getPhraseText());
+					//					}
 					triplePhraseList.add(triplePhrase);
 				}
 			}
-			
+
 		}
 		
+		deleteSameSet(triplePhraseList);
+
 		return triplePhraseList;
 	}
 
@@ -95,6 +97,33 @@ public class GetTriplePhraseListSecond {
 			}
 		}
 		return targetPhraseList;
+	}
+
+	
+	public static ArrayList<TriplePhrase> deleteSameSet(ArrayList<TriplePhrase> triplePhraseList){
+		
+		ArrayList<TriplePhrase> triplePhraseListBase = triplePhraseList;
+
+		
+
+		for(int i = 0 ; i < triplePhraseListBase.size() ; i++){
+			
+			int sameCount = 0;
+
+			for(TriplePhrase triplePhrase : triplePhraseList){
+				if(triplePhraseListBase.get(i).getEffectPhrase().equals(triplePhrase.getEffectPhrase()) 
+						&& triplePhraseListBase.get(i).getTargetPhraseList().equals(triplePhrase.getTargetPhraseList())){
+					sameCount++;
+				}
+			}
+			
+			if(sameCount>=2){
+				triplePhraseList.remove(triplePhraseListBase.get(i));
+			}
+
+		}
+
+		return triplePhraseList;
 	}
 
 
