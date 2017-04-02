@@ -71,8 +71,12 @@ public class Filtering {
 		for(String dicWord : targetFilteringList){
 			if(word.contains(dicWord)){
 				exist = true;
-				//System.out.println("辞書単語: " + dicWord);
+				System.out.println("辞書単語: " + dicWord);
 			}
+//			if(word.equals(dicWord)){
+//				exist = true;
+//				System.out.println("辞書単語: " + dicWord);
+//			}
 		}
 		
 		return exist;

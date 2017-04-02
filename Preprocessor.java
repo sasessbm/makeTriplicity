@@ -57,25 +57,16 @@ public class Preprocessor {
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
 		
 		for(String medicineNameInList : medicineNameList){
-			
 			if(medicineNameInList.equals(TargetMedicineName)){ continue; }
-			
 			int searchIndex = 0;
-			
 			if(sentenceText.contains(medicineNameInList)){
-				
 				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
-				
 				while(searchIndex != -1){
-					//System.out.println(searchIndex);
-					//System.out.println(medicineNameInList);
 					otherMedicineNameMap.put(searchIndex, medicineNameInList);
 					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
 				}
-				
 			}
 		}
-		
 		return otherMedicineNameMap;
 	}
 	

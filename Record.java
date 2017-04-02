@@ -1,7 +1,5 @@
 package makeTriplicity;
 
-import java.util.ArrayList;
-
 public class Record {
 	
 	private int id;
@@ -14,7 +12,6 @@ public class Record {
 	private String url_blogArticle;
 	private String age;
 	private String blogArticle;
-	//private ArrayList<String> sentenceList;
 	
 	//コンストラクタ
 	public Record(int id, Snippet snippet, String medicineName,
@@ -76,13 +73,5 @@ public class Record {
 	public String getBlogArticle() {
 		return blogArticle;
 	}
-
-//	public void setSentenceList(ArrayList<String> sentenceList) {
-//		this.sentenceList = sentenceList;
-//	}
-//
-//	public ArrayList<String> getSentenceList() {
-//		return sentenceList;
-//	}
 
 }

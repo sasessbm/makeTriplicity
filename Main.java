@@ -11,8 +11,8 @@ public class Main {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 0;
-		int endRecordNum = 3000;
+		int startRecordNum = 1905;
+		int endRecordNum = 1905;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -71,28 +71,7 @@ public class Main {
 				//対象でない薬剤名を元に戻す
 				phraseList = Preprocessor.restoreOtherMedicineName(phraseList, otherMedicineNameMap);
 				
-				//System.out.println("\r\n以下、文節単位");
-
-				//				//文節単位
-				//								for(Phrase phrase : phraseList){
-				//									System.out.println("---------------------------------------------------");
-				//									indexPhrase ++;
-				//									System.out.println("\r\n文節" + indexPhrase);
-				//									System.out.println(phrase.getPhraseText() + " DIndex:" + phrase.getDependencyIndex());
-				//									System.out.println("\r\n以下、形態素単位");
-				//									
-				//									//形態素単位
-				//									for(Morpheme morpheme : phrase.getMorphemeList()){
-				//										System.out.println(morpheme.getMorphemeText() + " →→→ " + morpheme.getPartOfSpeech());
-				//										
-				//									}
-				//								}
-
-				//System.out.println("\r\nId:" +record.getId());
-				//System.out.println("\r\n文:" + sentenceTextBefore);
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
-				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
-				//ArrayList<TriplePhrase> triplePhraseList = GetTriplePhraseListTest.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
@@ -158,12 +137,15 @@ public class Main {
 
 		ArrayList<Phrase> targetPhraseList = triplePhrase.getTargetPhraseList();
 		Phrase effectPhrase = triplePhrase.getEffectPhrase();
+		
 		for(Phrase targetPhrase : targetPhraseList){
-			for(Morpheme morpheme : targetPhrase.getMorphemeList()){
-				if(!morpheme.getMorphemeText().equals("TARGETMEDICINE")){ continue; }
-				morpheme.setMorphemeText(medicineName);
+			if(targetPhrase.getPhraseText().contains("TARGETMEDICINE")){
+				targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+				for(Morpheme morpheme : targetPhrase.getMorphemeList()){
+					if(!morpheme.getMorphemeText().contains("TARGETMEDICINE")){ continue; }
+					morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+				}
 			}
-			targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
 		}
 		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
 		return triplePhrase;
