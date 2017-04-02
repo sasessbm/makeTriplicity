@@ -1,6 +1,8 @@
 package makeTriplicity;
 
 import java.util.ArrayList;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class Preprocessor {
 	
@@ -32,21 +34,73 @@ public class Preprocessor {
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static String replaceMedicineName(String sentenceText, String targetMediceneName){
-
-		ArrayList<String> medicineNameList = new ArrayList<String>();
-		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+	public static String replaceMedicineName(String sentenceText, String targetMediceneName, 
+														TreeMap<Integer, String> otherMedicineNameMap){
 
 		if(sentenceText.contains(targetMediceneName)){
 			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
 		}
-
-		for(String medicineNameInList : medicineNameList){
-			if(sentenceText.contains(medicineNameInList)){
-				sentenceText = sentenceText.replace(medicineNameInList,"OTHERMEDICINE");
+		
+		for(Entry<Integer, String> map : otherMedicineNameMap.entrySet()){
+			if(sentenceText.contains(map.getValue())){
+				sentenceText = sentenceText.replace(map.getValue(),"OTHERMEDICINE");
 			}
 		}
+
 		return sentenceText;
+	}
+	
+	//対象でない薬剤名マップ取得
+	public static TreeMap<Integer, String> getOtherMedicineNameMap(String sentenceText, String TargetMedicineName){
+		TreeMap<Integer, String> otherMedicineNameMap = new TreeMap<Integer, String>();
+		ArrayList<String> medicineNameList = new ArrayList<String>();
+		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+		
+		for(String medicineNameInList : medicineNameList){
+			
+			if(medicineNameInList.equals(TargetMedicineName)){ continue; }
+			
+			int searchIndex = 0;
+			
+			if(sentenceText.contains(medicineNameInList)){
+				
+				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
+				
+				while(searchIndex != -1){
+					//System.out.println(searchIndex);
+					//System.out.println(medicineNameInList);
+					otherMedicineNameMap.put(searchIndex, medicineNameInList);
+					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
+				}
+				
+			}
+		}
+		
+		return otherMedicineNameMap;
+	}
+	
+	//対象でない薬剤名を戻す
+	public static ArrayList<Phrase> restoreOtherMedicineName(ArrayList<Phrase> phraseList, 
+																	TreeMap<Integer, String> otherMedicineNameMap){
+		
+		for(Integer key : otherMedicineNameMap.keySet()){
+			
+			String otherMedicineName = otherMedicineNameMap.get(key);
+			
+			for(Phrase phrase : phraseList){
+				if(phrase.getPhraseText().contains("OTHERMEDICINE")){
+					phrase.setPhraseText(phrase.getPhraseText().replaceFirst("OTHERMEDICINE", otherMedicineName));
+					for(Morpheme morpheme : phrase.getMorphemeList()){
+						if(!morpheme.getMorphemeText().equals("OTHERMEDICINE")){ continue; }
+						morpheme.setMorphemeText(otherMedicineName);
+						break;
+					}
+					break;
+				}
+			}
+		}
+		
+		return phraseList;
 	}
 
 	//薬剤名を含まない()削除

@@ -1,6 +1,7 @@
 package makeTriplicity;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import test.CaboChaTest3;
 
@@ -10,8 +11,8 @@ public class Main {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 1000;
-		int endRecordNum = 1500;
+		int startRecordNum = 0;
+		int endRecordNum = 3000;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -23,13 +24,13 @@ public class Main {
 
 			Snippet snippet = record.getSnippet();
 			String snippetText = snippet.getSnippetText();
-			String medicineName = record.getMedicineName();
+			String TargetMedicineName = record.getMedicineName();
 
 			//"。"が無いスニペットは対象としない
 			if(!snippetText.contains("。")){ continue; }
 
 			//対象薬剤名が無いスニペットは対象としない
-			if(!snippetText.contains(medicineName)){ continue; }
+			if(!snippetText.contains(TargetMedicineName)){ continue; }
 
 			//SentenceList取得
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
@@ -43,13 +44,16 @@ public class Main {
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
 
 				//対象薬剤名を含まない文は対象としない
-				if(!sentenceText.contains(medicineName)){ continue; }
+				if(!sentenceText.contains(TargetMedicineName)){ continue; }
 
 				sentenceTextBefore = sentenceText;
 				//System.out.println("\r\n文: " + sentenceTextBefore);
 
 				//前処理
-				sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
+				TreeMap<Integer, String> otherMedicineNameMap = Preprocessor.getOtherMedicineNameMap(sentenceText,TargetMedicineName);
+				
+				sentenceText = Preprocessor.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);
+				//System.out.println("\r\n文: " + sentenceText);
 				sentenceText = Preprocessor.deleteParentheses(sentenceText);
 				sentenceText = Preprocessor.deleteSpace(sentenceText);
 
@@ -63,6 +67,10 @@ public class Main {
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
+				
+				//対象でない薬剤名を元に戻す
+				phraseList = Preprocessor.restoreOtherMedicineName(phraseList, otherMedicineNameMap);
+				
 				//System.out.println("\r\n以下、文節単位");
 
 				//				//文節単位
@@ -88,7 +96,7 @@ public class Main {
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
-					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, medicineName);
+					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, TargetMedicineName);
 					
 					if(tripleSetListFirst.size() != 0){
 						display(record, sentenceTextBefore, tripleSetListFirst);
@@ -103,7 +111,7 @@ public class Main {
 				if(triplePhraseListSecond.size() == 0){ continue; }
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
 				
-				tripleSetListSecond = getTripleSetList(triplePhraseListSecond, medicineName);
+				tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
 
 				if(tripleSetListSecond.size() != 0){
 					display(record, sentenceTextBefore, tripleSetListSecond);

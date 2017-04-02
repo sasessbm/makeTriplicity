@@ -19,7 +19,8 @@ import org.xml.sax.SAXException;
 
 public class XmlReader {
 	
-	public static ArrayList<Phrase> GetPhraseList (ArrayList<String> xmlList) throws SAXException, IOException, ParserConfigurationException {
+	public static ArrayList<Phrase> GetPhraseList (ArrayList<String> xmlList) 
+						throws SAXException, IOException, ParserConfigurationException {
 		
 		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 		int rec = 0;

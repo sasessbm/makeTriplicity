@@ -24,7 +24,7 @@ public class Test {
 		String medicineName = "リウマトレックス";
 		
 		//前処理
-		sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
+		//sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
 		sentenceText = Preprocessor.deleteParentheses(sentenceText);
 		
 		//構文解析結果をXml形式で取得
