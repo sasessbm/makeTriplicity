@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Filtering {
 	
 	private static ArrayList<String> targetFilteringList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_2_clean.txt");
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_2_clean_human2.txt");
 
 	//110番辞書フィルタ
 	public static boolean filterTarget(TripleSet tripleSet){

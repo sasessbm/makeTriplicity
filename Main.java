@@ -11,8 +11,8 @@ public class Main {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 5000;
-		int endRecordNum = 8000;
+		int startRecordNum = 0;
+		int endRecordNum = 200;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -148,6 +148,10 @@ public class Main {
 			}
 		}
 		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace("TARGETMEDICINE", medicineName));
+		for(Morpheme morpheme : effectPhrase.getMorphemeList()){
+			if(!morpheme.getMorphemeText().contains("TARGETMEDICINE")){ continue; }
+			morpheme.setMorphemeText(morpheme.getMorphemeText().replace("TARGETMEDICINE", medicineName));
+		}
 		return triplePhrase;
 	}
 
