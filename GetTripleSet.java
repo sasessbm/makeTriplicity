@@ -5,95 +5,102 @@ import java.util.ArrayList;
 public class GetTripleSet {
 
 	public static TripleSet getTripleSet(TriplePhrase triplePhrase) {
-		
+
 		TripleSet tripleSet = new TripleSet();
-		
+
 		String medicineName = triplePhrase.getMedicineName();
 		Element targetElement = new Element();
 		Element effectElement = new Element();
-		
+
 		ArrayList<Morpheme> targetMorphemeList = new ArrayList<Morpheme>();
-		//ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
-		
+		ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
+
 		for(Phrase phrase : triplePhrase.getTargetPhraseList()){
 			for(Morpheme morpheme : phrase.getMorphemeList()){
 				targetMorphemeList.add(morpheme);
-				//target += morpheme.getMorphemeText();
 			}
 		}
-		
-//		for(Phrase phrase : triplePhrase.getEffectPhrase()){
-//			for(Morpheme morpheme : phrase.getMorphemeList()){
-//				effectMorphemeList.add(morpheme);
-//				effect += morpheme.getMorphemeText();
-//			}
-//		}
-		
-		targetElement = getElement(targetMorphemeList);
-		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText().replace("、", ""));
-		//effect = getAttribute(effectMorphemeList);
-		
+
+		for(Morpheme morpheme : triplePhrase.getEffectPhrase().getMorphemeList()){
+			effectMorphemeList.add(morpheme);
+		}
+
+		targetElement = getElement(targetMorphemeList, 1);
+		effectElement = getElement(effectMorphemeList, 2);
+		//		String targetText = "";
+		//		for(Morpheme targetMorpheme : targetMorphemeList){
+		//			targetText += targetMorpheme.getMorphemeText();
+		//		}
+		//		targetElement.setText(targetText.replace("、", ""));
+		//		targetElement.setMorphemeList(targetMorphemeList);
+		//		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText().replace("、", ""));
+		//		effectElement.setMorphemeList(effectMorphemeList);
+		//		
 		tripleSet.setMedicineName(medicineName);
 		tripleSet.setTargetElement(targetElement);
 		tripleSet.setEffectElement(effectElement);
-		
-		
-		//tripleSet.setTarget(target.replace("、", ""));
-		//tripleSet.setEffect(effect.replace("、", ""));
-		
+
 		return tripleSet;
 	}
-	
-	public static Element getElement(ArrayList<Morpheme> morphemeList){
-		
+
+	public static Element getElement(ArrayList<Morpheme> morphemeList, int elementType){
+
 		Element element = new Element();
 		String text = "";
 		ArrayList<Morpheme> elementMorphemeList = new ArrayList<Morpheme>();
-		int denialIndex = 0;
-		int morphemeIndex = 0;
-		
+		//int denialIndex = 0;
+		boolean isVerb = false;
+
+
+		//		for(Morpheme morpheme : morphemeList){
+		//			//System.out.println(morpheme.getMorphemeText());
+		//			if(morpheme.getOriginalForm().equals("ない")){
+		//				denialIndex ++;
+		//			}
+		//		}
+
 		for(Morpheme morpheme : morphemeList){
-			//System.out.println(morpheme.getMorphemeText());
-			if(morpheme.getOriginalForm().equals("ない")){
-				denialIndex ++;
-			}
-		}
-		
-		for(Morpheme morpheme : morphemeList){
-			morphemeIndex++;
-			
-//			if((morpheme.getPartOfSpeech().equals("助詞") || morpheme.getPartOfSpeech().equals("助動詞")) 
-//					& !morpheme.getOriginalForm().equals("の")){ break; }
-			
-			//助詞が出現
-			if(morpheme.getPartOfSpeech().equals("助詞") 
-					& !morpheme.getOriginalForm().equals("の")){ break; }
-			
+
+			//助詞が出現("の"以外) 
+			if(morpheme.getPartOfSpeech().equals("助詞") & !morpheme.getOriginalForm().equals("の") ){ break; }
+
+			if(morpheme.getOriginalForm().equals("、") || morpheme.getOriginalForm().equals("。")){ break; }
+			//System.out.println(morpheme.getMorphemeText() + "→" + morpheme.getPartOfSpeechDetails());
+
 			if(morpheme.getPartOfSpeech().equals("動詞")){
-				
-				if(denialIndex % 2 == 1 || morphemeIndex != morphemeList.size()){
-					text += morpheme.getMorphemeText(); 
-					elementMorphemeList.add(morpheme);
-					
-				}else{
-					//動詞は原形で取得
-					text += morpheme.getOriginalForm();
-					elementMorphemeList.add(morpheme);
-				}
-				 
+
+				//if(denialIndex % 2 == 1 || morphemeIndex != morphemeList.size()){
+				//text += morpheme.getMorphemeText(); 
+				//elementMorphemeList.add(morpheme);
+				//}
+
+				isVerb = true;
+
+				elementMorphemeList.add(morpheme);
+
 			}else{
-				text += morpheme.getMorphemeText(); 
+				isVerb = false;
 				elementMorphemeList.add(morpheme);
 			}
 		}
-		
-//		if(denialIndex % 2 == 1){
-//			attribute += "ない";
-//		}
-		
-		element.setText(text.replace("、", ""));
+
+		for(int i = 0; i < elementMorphemeList.size(); i++){
+
+			if(isVerb && i == elementMorphemeList.size() - 1 && elementType == 2){
+				text += elementMorphemeList.get(i).getOriginalForm(); //「効果」要素で、最後が動詞だった時
+			}else{
+				text += elementMorphemeList.get(i).getMorphemeText();
+			}
+		}
+
+		//		if(denialIndex % 2 == 1){
+		//			text += "ない";
+		//			//elementMorphemeList.add(morpheme);
+		//		}
+
+		element.setText(text);
 		element.setMorphemeList(elementMorphemeList);
-		
+
 		return element;
 	}
 

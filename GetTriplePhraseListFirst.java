@@ -8,7 +8,7 @@ public class GetTriplePhraseListFirst {
 
 	private static  ArrayList<Phrase> phraseList;
 	private static ArrayList<String> keywordList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword.txt");
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword_extend.txt");
 	private static TriplePhrase triplePhrase;
 
 	public static ArrayList<TriplePhrase> getTriplePhrase(ArrayList<Phrase> phraseList) {
@@ -78,6 +78,7 @@ public class GetTriplePhraseListFirst {
 			String originalForm = morpheme.getOriginalForm();
 			for(String keyword : keywordList){
 				if(originalForm.equals(keyword)){
+					//System.out.println(keyword);
 					keywordIndex = morphemeIndex;
 				}
 			}

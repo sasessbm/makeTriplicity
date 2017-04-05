@@ -34,8 +34,8 @@ public class GetTriplePhraseListSecond {
 					Morpheme morpheme = morphemeList.get(morphemeIndex);
 
 					//評価表現でない場合
-					if(!morpheme.getOriginalForm().contains(evalWord)){ continue; }
-					//if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
+					//if(!morpheme.getOriginalForm().contains(evalWord)){ continue; }
+					if(!morpheme.getOriginalForm().equals(evalWord)){ continue; }
 
 					ArrayList<Phrase> targetPhraseList = new ArrayList<Phrase>();
 					targetPhraseList =	judgeTargetPhrase(phrase.getId());
@@ -49,6 +49,7 @@ public class GetTriplePhraseListSecond {
 					//						System.out.println("対象::" + targetPhrase.getPhraseText());
 					//					}
 					triplePhraseList.add(triplePhrase);
+					//System.out.println("------------------------------------------");
 				}
 			}
 
@@ -99,7 +100,7 @@ public class GetTriplePhraseListSecond {
 		return targetPhraseList;
 	}
 
-	
+	//重複した組を削除
 	public static ArrayList<TriplePhrase> deleteSameSet(ArrayList<TriplePhrase> triplePhraseList){
 		
 		ArrayList<TriplePhrase> triplePhraseListBase = triplePhraseList;

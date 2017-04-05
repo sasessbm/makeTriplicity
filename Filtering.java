@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Filtering {
 	
 	private static ArrayList<String> targetFilteringList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_clean.txt");
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_2_clean.txt");
 
 	//110番辞書フィルタ
 	public static boolean filterTarget(TripleSet tripleSet){
@@ -58,6 +58,13 @@ public class Filtering {
 				nounFlag = false;
 			}
 		}
+		
+		if(targetWord.length() != 0){
+			if(searchTargetFilteringList(targetWord)){
+				existInTargetFilteringList = true;
+				targetWord = "";
+			}
+		}
 
 		return existInTargetFilteringList;
 	}
@@ -69,14 +76,14 @@ public class Filtering {
 		boolean exist = false;
 		
 		for(String dicWord : targetFilteringList){
-			if(word.contains(dicWord)){
-				exist = true;
-				System.out.println("辞書単語: " + dicWord);
-			}
-//			if(word.equals(dicWord)){
+//			if(word.contains(dicWord)){
 //				exist = true;
 //				System.out.println("辞書単語: " + dicWord);
 //			}
+			if(word.equals(dicWord)){
+				exist = true;
+				//System.out.println("辞書単語: " + dicWord);
+			}
 		}
 		
 		return exist;

@@ -11,8 +11,8 @@ public class Main {
 
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 1905;
-		int endRecordNum = 1905;
+		int startRecordNum = 5000;
+		int endRecordNum = 8000;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -82,8 +82,8 @@ public class Main {
 						System.out.println("\r\n提案手法から取得");
 						getSentenceNumOfTriple++;
 						tripleSetCount += tripleSetListFirst.size();
+						//continue;
 					}
-					continue;
 				}
 
 				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
