@@ -20,20 +20,20 @@ public class Test {
 //		sentenceText = Preprocessor.deleteParentheses(sentenceText);
 //		System.out.println("文:" + sentenceText);
 		
-		String sentenceText = "リウマトレックスを減らすと肝機能が改善";
-		String medicineName = "リウマトレックス";
+		//String sentenceText = "リウマトレックスを減らすと肝機能が改善";
+		//String medicineName = "リウマトレックス";
 		
 		//前処理
 		//sentenceText = Preprocessor.replaceMedicineName(sentenceText, medicineName);
-		sentenceText = Preprocessor.deleteParentheses(sentenceText);
+		//sentenceText = PreProcessing.deleteParentheses(sentenceText);
 		
 		//構文解析結果をXml形式で取得
-		ArrayList<String> xmlList = new ArrayList<String>();
-		xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
+		//ArrayList<String> xmlList = new ArrayList<String>();
+		//xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
 
 		//phraseList取得　(phrase,morphemeの生成)
-		ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
-		phraseList = XmlReader.GetPhraseList(xmlList);
+		//ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
+		//phraseList = XmlReader.GetPhraseList(xmlList);
 		
 		//TriplePhrase triplePhrase = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 		
@@ -42,9 +42,12 @@ public class Test {
 		//System.out.println("薬剤名:" + triplePhrase.getMedicineName());
 		//System.out.println("対象要素存在文節:" + triplePhrase.getTargetPhrase());
 		//System.out.println("効果要素存在文節:" + triplePhrase.getEffectPhrase());
+		
 
 		
 	}
+	
+	
 	
 	
 

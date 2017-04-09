@@ -1,18 +1,30 @@
 package makeTriplicity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import test.CaboChaTest3;
 
 public class Main {
-
+	
 	public static void main(String[] args) throws Exception {
+		
+		//ArrayList<TripleSet> tripleSetList = run();
+		
+	}
 
+	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
+
+		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
 		ArrayList<Record> recordList = new ArrayList<Record>();
 		//int recordNum = 100;
-		int startRecordNum = 0;
-		int endRecordNum = 200;
+		//int startRecordNum = 0;
+		//int endRecordNum = 10;
 		int tripleSetCount = 0;
 		int getSentenceNumOfTriple = 0;
 
@@ -34,9 +46,10 @@ public class Main {
 
 			//SentenceList取得
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
-			sentenceTextList = Preprocessor.getSentenceTextList(snippetText);
+			sentenceTextList = PreProcessing.getSentenceTextList(snippetText);
 
 			String sentenceTextBefore = "";
+			
 			//文単位
 			for(String sentenceText : sentenceTextList){
 
@@ -50,12 +63,12 @@ public class Main {
 				//System.out.println("\r\n文: " + sentenceTextBefore);
 
 				//前処理
-				TreeMap<Integer, String> otherMedicineNameMap = Preprocessor.getOtherMedicineNameMap(sentenceText,TargetMedicineName);
+				TreeMap<Integer, String> otherMedicineNameMap = PreProcessing.getOtherMedicineNameMap(sentenceText,TargetMedicineName);
 				
-				sentenceText = Preprocessor.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);
+				sentenceText = PreProcessing.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);
 				//System.out.println("\r\n文: " + sentenceText);
-				sentenceText = Preprocessor.deleteParentheses(sentenceText);
-				sentenceText = Preprocessor.deleteSpace(sentenceText);
+				sentenceText = PreProcessing.deleteParentheses(sentenceText);
+				sentenceText = PreProcessing.deleteSpace(sentenceText);
 
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
@@ -68,8 +81,9 @@ public class Main {
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
 				
+				//後処理
 				//対象でない薬剤名を元に戻す
-				phraseList = Preprocessor.restoreOtherMedicineName(phraseList, otherMedicineNameMap);
+				phraseList = PostProcessing.restoreOtherMedicineName(phraseList, otherMedicineNameMap);
 				
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
@@ -78,6 +92,7 @@ public class Main {
 					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, TargetMedicineName);
 					
 					if(tripleSetListFirst.size() != 0){
+						tripleSetList.addAll(tripleSetListFirst);
 						display(record, sentenceTextBefore, tripleSetListFirst);
 						System.out.println("\r\n提案手法から取得");
 						getSentenceNumOfTriple++;
@@ -93,6 +108,7 @@ public class Main {
 				tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
 
 				if(tripleSetListSecond.size() != 0){
+					tripleSetList.addAll(tripleSetListSecond);
 					display(record, sentenceTextBefore, tripleSetListSecond);
 					System.out.println("\r\nベースライン２から取得");
 					getSentenceNumOfTriple++;
@@ -104,6 +120,8 @@ public class Main {
 		System.out.println(getSentenceNumOfTriple + "文から");
 		System.out.println("三つ組を" + tripleSetCount +"個取得できました！！");
 		System.out.println("終了！！！");
+		
+		return tripleSetList;
 	}
 	
 	//三つ組リスト取得
@@ -114,6 +132,7 @@ public class Main {
 			TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
 			//110番辞書フィルタ
 			if(!Filtering.filterTarget(tripleSet)){ continue; }
+			PostProcessing.deleteParentheses(tripleSet);
 			tripleSetList.add(tripleSet);
 		}
 		return tripleSetList;

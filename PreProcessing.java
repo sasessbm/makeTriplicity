@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class Preprocessor {
+public class PreProcessing {
 	
 	public static String deleteSpace(String sentenceText){
 		
@@ -70,29 +70,7 @@ public class Preprocessor {
 		return otherMedicineNameMap;
 	}
 	
-	//対象でない薬剤名を戻す
-	public static ArrayList<Phrase> restoreOtherMedicineName(ArrayList<Phrase> phraseList, 
-																	TreeMap<Integer, String> otherMedicineNameMap){
-		
-		for(Integer key : otherMedicineNameMap.keySet()){
-			
-			String otherMedicineName = otherMedicineNameMap.get(key);
-			
-			for(Phrase phrase : phraseList){
-				if(phrase.getPhraseText().contains("OTHERMEDICINE")){
-					phrase.setPhraseText(phrase.getPhraseText().replaceFirst("OTHERMEDICINE", otherMedicineName));
-					for(Morpheme morpheme : phrase.getMorphemeList()){
-						if(!morpheme.getMorphemeText().equals("OTHERMEDICINE")){ continue; }
-						morpheme.setMorphemeText(otherMedicineName);
-						break;
-					}
-					break;
-				}
-			}
-		}
-		
-		return phraseList;
-	}
+	
 
 	//薬剤名を含まない()削除
 	public static String deleteParentheses(String sentenceText){
