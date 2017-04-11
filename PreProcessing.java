@@ -24,7 +24,10 @@ public class PreProcessing {
 		int indexPeriod = -1;
 		while (true){
 			indexPeriod = snippetText.indexOf("。", indexStart + 1);
-			if(indexPeriod == -1){ break; }
+			if(indexPeriod == -1){ 
+				sentenceTextList.add(snippetText.substring(indexStart + 1));
+				break; 
+			}
 			//Sentence sentence = new Sentence(snippetText.substring(indexStart + 1, indexPeriod));
 			sentenceTextList.add(snippetText.substring(indexStart + 1, indexPeriod));
 			indexStart = indexPeriod;
@@ -110,6 +113,12 @@ public class PreProcessing {
 			indexStart = indexSecondCharacter;
 		}
 		return sentenceText;	
+	}
+	
+	
+	public static String deleteBothSideDots(String snippetText){
+		snippetText = snippetText.substring(3, snippetText.length()-3);
+		return snippetText;
 	}
 
 

@@ -14,7 +14,7 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		
-		//ArrayList<TripleSet> tripleSetList = run();
+		ArrayList<TripleSet> tripleSetList = run(0,500);
 		
 	}
 
@@ -37,12 +37,18 @@ public class Main {
 			Snippet snippet = record.getSnippet();
 			String snippetText = snippet.getSnippetText();
 			String TargetMedicineName = record.getMedicineName();
+			
+			//System.out.println(snippetText);
 
 			//"。"が無いスニペットは対象としない
-			if(!snippetText.contains("。")){ continue; }
+			//if(!snippetText.contains("。")){ continue; }
 
 			//対象薬剤名が無いスニペットは対象としない
 			if(!snippetText.contains(TargetMedicineName)){ continue; }
+			
+			snippetText = PreProcessing.deleteBothSideDots(snippetText);
+			
+			//System.out.println("スニペット: " + snippetText);
 
 			//SentenceList取得
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
@@ -52,6 +58,8 @@ public class Main {
 			
 			//文単位
 			for(String sentenceText : sentenceTextList){
+				
+				//System.out.println("\r\n文: " + sentenceText);
 
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
@@ -65,17 +73,25 @@ public class Main {
 				//前処理
 				TreeMap<Integer, String> otherMedicineNameMap = PreProcessing.getOtherMedicineNameMap(sentenceText,TargetMedicineName);
 				
+				
 				sentenceText = PreProcessing.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);
 				//System.out.println("\r\n文: " + sentenceText);
 				sentenceText = PreProcessing.deleteParentheses(sentenceText);
 				sentenceText = PreProcessing.deleteSpace(sentenceText);
+				
+				//System.out.println("\r\n文: " + sentenceText);
 
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
+				//System.out.println("\r\n文: " + sentenceText);
 
 				//構文解析結果をXml形式で取得
 				ArrayList<String> xmlList = new ArrayList<String>();
 				xmlList = SyntaxAnalys.GetSyntaxAnalysResultXml(sentenceText);
+//				for(String phrse : xmlList){
+//					System.out.println(phrse);
+//				}
+				
 
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();

@@ -40,6 +40,7 @@ public class SyntaxAnalys {
 
 			//cabochaの実行開始　ラティス形式で出力(-f1の部分で決定、詳しくはcabochaのhelp参照)
 			ProcessBuilder pb = new ProcessBuilder("cabocha", "-f3");
+			//ProcessBuilder pb = new ProcessBuilder("cabocha", "-f1");
 			Process process = pb.start();
 
 			//実行途中で文字列を入力(コマンドプロンプトで文字を入力する操作)
