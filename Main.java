@@ -11,24 +11,23 @@ import org.xml.sax.SAXException;
 import test.CaboChaTest3;
 
 public class Main {
-	
+
 	public static final String TARGETMEDICINE = "TARGETMEDICINE";
+	public static final String DIVISION_LINE = "--------------------------------------------------------"
+												 + "--------------------------------------------------------";
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<TripleSet> tripleSetList = run(0,500);
-
+		ArrayList<TripleSet> tripleSetList = run(0,100);
 	}
 
 	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
 
 		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
 		ArrayList<Record> recordList = new ArrayList<Record>();
-		//int recordNum = 100;
-		//int startRecordNum = 0;
-		//int endRecordNum = 10;
-		int tripleSetCount = 0;
-		int getSentenceNumOfTriple = 0;
+		int countGetSnippet = 0;
+		int countGetSentence = 0;
+		int countTripleSet = 0;
 
 		//recordList取得　(recordの生成)
 		recordList = GetRecordList.getRecordList(startRecordNum, endRecordNum);
@@ -36,56 +35,40 @@ public class Main {
 		//レコード単位
 		for(Record record : recordList){
 
+			boolean writerStatusHasDisplayed = false;
 			Snippet snippet = record.getSnippet();
 			String snippetText = snippet.getSnippetText();
 			String TargetMedicineName = record.getMedicineName();
+			String sentenceTextBefore = "";
 
-			//System.out.println(snippetText);
-
-			//"。"が無いスニペットは対象としない
-			//if(!snippetText.contains("。")){ continue; }
-
-			//対象薬剤名が無いスニペットは対象としない
-			if(!snippetText.contains(TargetMedicineName)){ continue; }
-
-			snippetText = PreProcessing.deleteBothSideDots(snippetText);
-
-			//System.out.println("スニペット: " + snippetText);
+			//if(!snippetText.contains("。")){ continue; }	//"。"が無いスニペットは対象としない
+			if(!snippetText.contains(TargetMedicineName)){ continue; }	//対象薬剤名が無いスニペットは対象としない
 
 			//SentenceList取得
+			snippetText = PreProcessing.deleteBothSideDots(snippetText);	//両サイドの「・・・」を削除
 			ArrayList<String> sentenceTextList = new ArrayList<String>();
 			sentenceTextList = PreProcessing.getSentenceTextList(snippetText);
 
-			String sentenceTextBefore = "";
-
 			//文単位
 			for(String sentenceText : sentenceTextList){
+				
+				boolean sentenceHasDisplayed = false;
 
-				//System.out.println("\r\n文: " + sentenceText);
-
-				//空白の文は対象としない
-				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
-
-				//対象薬剤名を含まない文は対象としない
-				if(!sentenceText.contains(TargetMedicineName)){ continue; }
+				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }	//空白の文は対象としない
+				if(!sentenceText.contains(TargetMedicineName)){ continue; } //対象薬剤名を含まない文は対象としない
 
 				sentenceTextBefore = sentenceText;
-				//System.out.println("\r\n文: " + sentenceTextBefore);
 
 				//前処理
-				TreeMap<Integer, String> otherMedicineNameMap = PreProcessing.getOtherMedicineNameMap(sentenceText,TargetMedicineName);
-
-
-				sentenceText = PreProcessing.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);
-				//System.out.println("\r\n文: " + sentenceText);
-				sentenceText = PreProcessing.deleteParentheses(sentenceText);
-				sentenceText = PreProcessing.deleteSpace(sentenceText);
-
-				//System.out.println("\r\n文: " + sentenceText);
+				TreeMap<Integer, String> otherMedicineNameMap = 
+						PreProcessing.getOtherMedicineNameMap(sentenceText,TargetMedicineName);	//対象薬剤名以外の薬剤名取得
+				sentenceText = 
+						PreProcessing.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);	//薬剤名置き換え
+				sentenceText = PreProcessing.deleteParentheses(sentenceText);	//括弧削除
+				sentenceText = PreProcessing.deleteSpace(sentenceText);	//スペース削除
 
 				//空白の文は対象としない
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
-				//System.out.println("\r\n文: " + sentenceText);
 
 				//構文解析結果をXml形式で取得
 				ArrayList<String> xmlList = new ArrayList<String>();
@@ -96,53 +79,41 @@ public class Main {
 				phraseList = XmlReader.GetPhraseList(xmlList);
 
 				//後処理
-				//対象でない薬剤名を元に戻す
-				phraseList = PostProcessing.restoreOtherMedicineName(phraseList, otherMedicineNameMap);
+				phraseList = PostProcessing.restoreOtherMedicineName(phraseList, otherMedicineNameMap);	//対象でない薬剤名を元に戻す
 
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
+				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
 					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, TargetMedicineName);
-
-					if(tripleSetListFirst.size() != 0){
-						tripleSetList.addAll(tripleSetListFirst);
-						display(record, sentenceTextBefore, tripleSetListFirst);
-						System.out.println("\r\n提案手法から取得");
-						getSentenceNumOfTriple++;
-						tripleSetCount += tripleSetListFirst.size();
-						//continue;
-					}
 				}
-
-				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
-				if(triplePhraseListSecond.size() == 0){
-					if(tripleSetListFirst.size() != 0){
-						System.out.println("------------------------------------------------------------------------------------");
-					}
-					continue; 
+				if(triplePhraseListSecond.size() != 0){
+					tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
 				}
-
-
-				tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
-
-				if(tripleSetListSecond.size() != 0){
-					tripleSetList.addAll(tripleSetListSecond);
-					display(record, sentenceTextBefore, tripleSetListSecond);
-					System.out.println("\r\nベースライン２から取得");
-					getSentenceNumOfTriple++;
-					tripleSetCount += tripleSetListSecond.size();
-				}
-
 				if(tripleSetListFirst.size() != 0 || tripleSetListSecond.size() != 0){
-					System.out.println("------------------------------------------------------------------------------------");
+					if(writerStatusHasDisplayed == false){
+						countGetSnippet++;
+						displayWriterStatus(record, sentenceTextBefore);
+						writerStatusHasDisplayed = true;
+					}
+					if(sentenceHasDisplayed == false){
+						countGetSentence++;
+						System.out.println("\r\n\r\n文: " + sentenceTextBefore);
+						sentenceHasDisplayed = true;
+					}
+					countTripleSet += tripleSetListFirst.size();
+					countTripleSet += tripleSetListSecond.size();
+					displayTripleSet(tripleSetListFirst, "\r\n提案手法から取得");
+					displayTripleSet(tripleSetListSecond, "\r\nベースライン２から取得");
 				}
 			}
 		}
-		//System.out.println("------------------------------------------------------------------------------------");
-		System.out.println(getSentenceNumOfTriple + "文から");
-		System.out.println("三つ組を" + tripleSetCount +"個取得できました！！");
+		System.out.println(DIVISION_LINE);
+		System.out.println(countGetSnippet + "スニペット中の");
+		System.out.println(countGetSentence + "文から");
+		System.out.println("三つ組を" + countTripleSet +"個取得できました！！");
 		System.out.println("終了！！！");
 
 		return tripleSetList;
@@ -150,28 +121,24 @@ public class Main {
 
 	//三つ組リスト取得
 	public static ArrayList<TripleSet> getTripleSetList(ArrayList<TriplePhrase> triplePhraseListFirst, String medicineName){
-
 		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
+		
 		for(TriplePhrase triplePhrase : triplePhraseListFirst){
 			TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
-			//110番辞書フィルタ
-			if(!Filtering.filterTarget(tripleSet)){ continue; }
+			if(!Filtering.filterTarget(tripleSet)){ continue; }	//110番辞書フィルタ
 			PostProcessing.deleteParentheses(tripleSet);
 			tripleSetList.add(tripleSet);
 		}
+		
 		return tripleSetList;
 	}
 
 	//三つ組取得
 	public static TripleSet makeTripleSet(TriplePhrase triplePhrase, String medicineName){
-
-		//薬剤名セット
-		triplePhrase.setMedicineName(medicineName);
-		//薬剤名置き換え
-		triplePhrase = replaceMedicineName(triplePhrase , medicineName);
-		//三つ組取得
-		TripleSet tripleSet = GetTripleSet.getTripleSet(triplePhrase);
-
+		
+		triplePhrase.setMedicineName(medicineName);	//薬剤名セット
+		triplePhrase = replaceMedicineName(triplePhrase , medicineName); //薬剤名置き換え
+		TripleSet tripleSet = GetTripleSet.getTripleSet(triplePhrase);	//三つ組取得
 		return tripleSet;
 	}
 
@@ -190,6 +157,7 @@ public class Main {
 				}
 			}
 		}
+		
 		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace(TARGETMEDICINE, medicineName));
 		for(Morpheme morpheme : effectPhrase.getMorphemeList()){
 			if(!morpheme.getMorphemeText().contains(TARGETMEDICINE)){ continue; }
@@ -198,23 +166,25 @@ public class Main {
 		return triplePhrase;
 	}
 
-	//情報表示
-	public static void display(Record record, String sentenceTextBefore, ArrayList<TripleSet> tripleSetList){
-
-		//ステータス表示
-		//System.out.println("------------------------------------------------------------------------------------");
-		System.out.print("\r\nId:" +record.getId());
+	//ステータス表示
+	public static void displayWriterStatus(Record record, String sentenceTextBefore){
+		
+		System.out.println(DIVISION_LINE);
+		System.out.print("Id:" +record.getId());
 		System.out.print(" | 性別:" +record.getSex());
 		System.out.print(" | 年齢:" +record.getAge());
 		System.out.println(" | 病名:" +record.getDiseaseName());
-		System.out.println("\r\n文: " + sentenceTextBefore);
+	}
+	
+	//三つ組表示
+	public static void displayTripleSet(ArrayList<TripleSet> tripleSetList, String gainType){
 
-		//三つ組表示
+		if(tripleSetList.size() == 0){ return; }
 		for(TripleSet tripleSet : tripleSetList){
 			System.out.println("\r\n薬剤名: " + tripleSet.getMedicineName());
 			System.out.println("対象: " + tripleSet.getTargetElement().getText());
 			System.out.println("効果: " + tripleSet.getEffectElement().getText());
 		}
+		System.out.println(gainType);
 	}
-
 }

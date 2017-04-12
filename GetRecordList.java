@@ -70,7 +70,6 @@ public class GetRecordList {
 					con.close();
 					System.out.println("MySQLのクローズに成功しました。");
 					System.out.println("取得レコード数は　" + getRecordNum + "　です");
-					System.out.println("------------------------------------------------------------------------------------");
 				} catch (SQLException e) {
 					System.out.println("MySQLのクローズに失敗しました。");
 				}
