@@ -41,7 +41,9 @@ public class GetRecordList {
 				Record record;
 				Snippet snippet;
 				//sql = "select * from tobyo_table_no_double where id = " + id;
-				sql = "select * from tobyo_table_no_double where id >=" + startRecordNum + " and id <= " + endRecordNum
+//				sql = "select * from tobyo_table_no_double where id >=" + startRecordNum + " and id <= " + endRecordNum
+//						+ " order by id";
+				sql = "select * from tobyo_table_no_double_renumber where id >=" + startRecordNum + " and id <= " + endRecordNum
 						+ " order by id";
 				System.out.println(sql);
 				ResultSet rs = stm.executeQuery(sql);
@@ -68,6 +70,7 @@ public class GetRecordList {
 					con.close();
 					System.out.println("MySQLのクローズに成功しました。");
 					System.out.println("取得レコード数は　" + getRecordNum + "　です");
+					System.out.println("------------------------------------------------------------------------------------");
 				} catch (SQLException e) {
 					System.out.println("MySQLのクローズに失敗しました。");
 				}
