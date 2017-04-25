@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 public class Filtering {
 	
+//	private static ArrayList<String> targetFilteringList = 
+//			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_2_clean_human2.txt");
+	
 	private static ArrayList<String> targetFilteringList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_dic_110_2_clean_human2.txt");
-
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\辞書\\110&body.txt");
+	
 	//110番辞書フィルタ
 	public static boolean filterTarget(TripleSet tripleSet){
 
@@ -82,7 +85,7 @@ public class Filtering {
 //			}
 			if(word.equals(dicWord)){
 				exist = true;
-				//System.out.println("辞書単語: " + dicWord);
+				System.out.println("辞書単語: " + dicWord);
 			}
 		}
 		

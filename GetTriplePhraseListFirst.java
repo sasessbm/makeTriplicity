@@ -98,7 +98,6 @@ public class GetTriplePhraseListFirst {
 				String partOfSpeechDetails = phrase.getMorphemeList()
 						.get(phrase.getMorphemeList().size()-1).getPartOfSpeechDetails();
 				if(partOfSpeechDetails.contains("格助詞") || partOfSpeechDetails.contains("接続助詞")){
-					//phrase.setPhraseType("Keyword");
 					//System.out.println("手がかり語存在文節:"+ phrase.getPhraseText());
 					judgeEffectPhrase(phrase.getDependencyIndex());
 					break;

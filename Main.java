@@ -18,7 +18,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<TripleSet> tripleSetList = run(0,100);
+		ArrayList<TripleSet> tripleSetList = run(0,1000);
 	}
 
 	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
@@ -56,7 +56,6 @@ public class Main {
 
 				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }	//空白の文は対象としない
 				if(!sentenceText.contains(TargetMedicineName)){ continue; } //対象薬剤名を含まない文は対象としない
-
 				sentenceTextBefore = sentenceText;
 
 				//前処理
@@ -67,8 +66,7 @@ public class Main {
 				sentenceText = PreProcessing.deleteParentheses(sentenceText);	//括弧削除
 				sentenceText = PreProcessing.deleteSpace(sentenceText);	//スペース削除
 
-				//空白の文は対象としない
-				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }
+				if(sentenceText.equals(null) || sentenceText.equals("")){ continue; }	//空白の文は対象としない
 
 				//構文解析結果をXml形式で取得
 				ArrayList<String> xmlList = new ArrayList<String>();
@@ -77,10 +75,9 @@ public class Main {
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
-
-				//後処理
 				phraseList = PostProcessing.restoreOtherMedicineName(phraseList, otherMedicineNameMap);	//対象でない薬剤名を元に戻す
 
+				//三つ組取得
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
 				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
@@ -89,22 +86,30 @@ public class Main {
 				if(triplePhraseListFirst.size() != 0){
 					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, TargetMedicineName);
 				}
-				if(triplePhraseListSecond.size() != 0){
-					tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
-				}
+				
+//				if(triplePhraseListSecond.size() != 0){
+//					tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
+//				}
+				
+				//表示
 				if(tripleSetListFirst.size() != 0 || tripleSetListSecond.size() != 0){
+					
 					if(writerStatusHasDisplayed == false){
 						countGetSnippet++;
 						displayWriterStatus(record, sentenceTextBefore);
 						writerStatusHasDisplayed = true;
 					}
+					
 					if(sentenceHasDisplayed == false){
 						countGetSentence++;
 						System.out.println("\r\n\r\n文: " + sentenceTextBefore);
 						sentenceHasDisplayed = true;
 					}
+					
 					countTripleSet += tripleSetListFirst.size();
 					countTripleSet += tripleSetListSecond.size();
+					tripleSetList.addAll(tripleSetListFirst);
+					tripleSetList.addAll(tripleSetListSecond);
 					displayTripleSet(tripleSetListFirst, "\r\n提案手法から取得");
 					displayTripleSet(tripleSetListSecond, "\r\nベースライン２から取得");
 				}
@@ -121,11 +126,12 @@ public class Main {
 
 	//三つ組リスト取得
 	public static ArrayList<TripleSet> getTripleSetList(ArrayList<TriplePhrase> triplePhraseListFirst, String medicineName){
+		
 		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
 		
 		for(TriplePhrase triplePhrase : triplePhraseListFirst){
 			TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
-			if(!Filtering.filterTarget(tripleSet)){ continue; }	//110番辞書フィルタ
+			//if(!Filtering.filterTarget(tripleSet)){ continue; }	//110番辞書フィルタ
 			PostProcessing.deleteParentheses(tripleSet);
 			tripleSetList.add(tripleSet);
 		}
