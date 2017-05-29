@@ -18,7 +18,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<TripleSet> tripleSetList = run(0,1000);
+		ArrayList<TripleSet> tripleSetList = run(0,3000);
 	}
 
 	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
@@ -40,9 +40,11 @@ public class Main {
 			String snippetText = snippet.getSnippetText();
 			String TargetMedicineName = record.getMedicineName();
 			String sentenceTextBefore = "";
+			
+			//System.out.println(snippetText);
 
 			//if(!snippetText.contains("。")){ continue; }	//"。"が無いスニペットは対象としない
-			if(!snippetText.contains(TargetMedicineName)){ continue; }	//対象薬剤名が無いスニペットは対象としない
+			if(!snippetText.contains(TargetMedicineName)){ continue; }  //対象薬剤名が無いスニペットは対象としない
 
 			//SentenceList取得
 			snippetText = PreProcessing.deleteBothSideDots(snippetText);	//両サイドの「・・・」を削除
@@ -79,7 +81,7 @@ public class Main {
 
 				//三つ組取得
 				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
-				ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
+				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
 

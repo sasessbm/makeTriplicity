@@ -7,8 +7,10 @@ import java.util.ListIterator;
 public class GetTriplePhraseListFirst {
 
 	private static  ArrayList<Phrase> phraseList;
+//	private static ArrayList<String> keywordList = 
+//			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword_extend.txt");
 	private static ArrayList<String> keywordList = 
-			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword_extend.txt");
+			GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\keyword_extend2.txt");
 	private static TriplePhrase triplePhrase;
 
 	public static ArrayList<TriplePhrase> getTriplePhrase(ArrayList<Phrase> phraseList) {
@@ -21,16 +23,20 @@ public class GetTriplePhraseListFirst {
 
 			triplePhrase = new TriplePhrase();
 			String phraseText = phrase.getPhraseText();
-			if(!phraseText.contains("TARGETMEDICINE")){ continue; }
+			//if(!phraseText.contains("TARGETMEDICINE")){ continue; }
+			if(!phraseText.contains("MEDICINE")){ continue; }
 			//System.out.println(phraseText);
 
 			//対象薬剤名のすぐ後ろに手がかり語があるか探索
-			int keywordIndex = isExistKeyword(phrase.getMorphemeList());
+			int keywordIndex = getKeywordIndex(phrase.getMorphemeList());
 			ArrayList<Morpheme> morphemeList = phrase.getMorphemeList();
 			int medicineIndex = -1;
 
 			for(int i = 0; i<morphemeList.size(); i++){
-				if(!morphemeList.get(i).getMorphemeText().contains("TARGETMEDICINE")){ continue; }
+				//System.out.println("前"+morphemeList.get(i).getMorphemeText());
+				//if(!morphemeList.get(i).getMorphemeText().contains("TARGETMEDICINE")){ continue; }
+				if(!morphemeList.get(i).getMorphemeText().contains("MEDICINE")){ continue; }
+				//System.out.println(morphemeList.get(i).getMorphemeText());
 				medicineIndex = i;
 				break;
 			}
@@ -39,7 +45,7 @@ public class GetTriplePhraseListFirst {
 
 			//同じ文節内にある
 			if(keywordIndex > 0){
-				if((keywordIndex - 1) != medicineIndex){ continue; }
+				if((keywordIndex - 1) != medicineIndex){ continue; } //隣り合っているか
 				//System.out.println("自身のIDを渡す");
 				//自身のIDを渡す
 				judgeKeywordPhrase(phrase.getId());
@@ -68,7 +74,7 @@ public class GetTriplePhraseListFirst {
 	}
 
 	//手がかり語の位置を探索
-	public static int isExistKeyword(ArrayList<Morpheme> morphemeList){
+	public static int getKeywordIndex(ArrayList<Morpheme> morphemeList){
 
 		int keywordIndex = -1;
 		int morphemeIndex = -1;
@@ -92,35 +98,34 @@ public class GetTriplePhraseListFirst {
 		for(Phrase phrase : phraseList){
 
 			if(phrase.getId() != dependencyIndex){ continue; }
-			if(isExistKeyword(phrase.getMorphemeList()) != -1){
+			if(getKeywordIndex(phrase.getMorphemeList()) != -1){
 
 				//一番最後の文節が、格助詞または接続助詞か確認
 				String partOfSpeechDetails = phrase.getMorphemeList()
 						.get(phrase.getMorphemeList().size()-1).getPartOfSpeechDetails();
 				if(partOfSpeechDetails.contains("格助詞") || partOfSpeechDetails.contains("接続助詞")){
 					//System.out.println("手がかり語存在文節:"+ phrase.getPhraseText());
-					judgeEffectPhrase(phrase.getDependencyIndex());
+					judgeEffectPhrase(phrase.getDependencyIndex(), dependencyIndex);
 					break;
 				}
 				break;
 			}
-
 		}
-
 	}
 
 	//「効果」要素存在文節判定
-	public static void judgeEffectPhrase(int dependencyIndex){
+	public static void judgeEffectPhrase(int effectId, int keyId){
 
 		//ArrayList<Phrase> effectPhraseList = new ArrayList<Phrase>();
 		for(Phrase phrase : phraseList){
-			if(phrase.getId() == dependencyIndex){
+			int phraseId = phrase.getId();
+			if(phraseId == effectId){
 				//effectPhraseList.add(phrase);
 				//triplePhrase.setEffectPhraseList(effectPhraseList);
 				triplePhrase.setEffectPhrase(phrase);
 				//System.out.println("「効果」要素存在文節:"+ phrase.getPhraseText());
 				//phrase.setPhraseType("Effect");
-				judgeTargetPhrase(phrase.getId());
+				judgeTargetPhrase(effectId, keyId);
 				break;
 			}
 		}
@@ -128,7 +133,7 @@ public class GetTriplePhraseListFirst {
 	}
 
 	//「対象」要素存在文節判定
-	public static void judgeTargetPhrase(int id){
+	public static void judgeTargetPhrase(int effectId, int keyId){
 
 		//String targetPhraseText = "";
 		boolean findPhrase = false;
@@ -138,8 +143,19 @@ public class GetTriplePhraseListFirst {
 		for(int i=1; i<=phraseList.size(); i++){
 			int currentIndex = phraseList.size()-i;
 			Phrase phrase = phraseList.get(currentIndex);
+			int phraseDependencyIndex = phrase.getDependencyIndex();
+			int phraseId = phrase.getId();
+			
+			//「手がかり語」文節まで到達した時
+			if(phraseId == keyId){ 
+				if(targetPhraseList.size() != 0){
+					Collections.reverse(targetPhraseList);
+					triplePhrase.setTargetPhraseList(targetPhraseList);
+				}
+				break; 
+			} 
 
-			if(phraseList.get(currentIndex).getDependencyIndex() == id || findPhrase){
+			if(phraseDependencyIndex == effectId || findPhrase){
 
 				String lastMorphemeText = phrase.getMorphemeList()
 						.get(phrase.getMorphemeList().size()-1)

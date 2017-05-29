@@ -50,6 +50,7 @@ public class PreProcessing {
 			}
 		}
 
+		//System.out.println(sentenceText);
 		return sentenceText;
 	}
 	
