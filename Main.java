@@ -12,13 +12,15 @@ import test.CaboChaTest3;
 
 public class Main {
 
-	public static final String TARGETMEDICINE = "TARGETMEDICINE";
+	public static final String MEDICINE = "MEDICINE";
 	public static final String DIVISION_LINE = "--------------------------------------------------------"
 												 + "--------------------------------------------------------";
+	
+	private static TreeMap<Integer, String> medicineNameMap;
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<TripleSet> tripleSetList = run(0,3000);
+		ArrayList<TripleSet> tripleSetList = run(19,19);
 	}
 
 	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
@@ -41,7 +43,7 @@ public class Main {
 			String TargetMedicineName = record.getMedicineName();
 			String sentenceTextBefore = "";
 			
-			//System.out.println(snippetText);
+			System.out.println(snippetText);
 
 			//if(!snippetText.contains("。")){ continue; }	//"。"が無いスニペットは対象としない
 			if(!snippetText.contains(TargetMedicineName)){ continue; }  //対象薬剤名が無いスニペットは対象としない
@@ -61,10 +63,10 @@ public class Main {
 				sentenceTextBefore = sentenceText;
 
 				//前処理
-				TreeMap<Integer, String> otherMedicineNameMap = 
-						PreProcessing.getOtherMedicineNameMap(sentenceText,TargetMedicineName);	//対象薬剤名以外の薬剤名取得
+				medicineNameMap = PreProcessing.getMedicineNameMap(sentenceText); //薬剤名取得
+				//PostProcessing.medicineNameMap = medicineNameMap; // 後処理クラスに代入
 				sentenceText = 
-						PreProcessing.replaceMedicineName(sentenceText, TargetMedicineName, otherMedicineNameMap);	//薬剤名置き換え
+						PreProcessing.replaceMedicineName(sentenceText, medicineNameMap);	//薬剤名置き換え
 				sentenceText = PreProcessing.deleteParentheses(sentenceText);	//括弧削除
 				sentenceText = PreProcessing.deleteSpace(sentenceText);	//スペース削除
 
@@ -77,16 +79,17 @@ public class Main {
 				//phraseList取得　(phrase,morphemeの生成)
 				ArrayList<Phrase> phraseList = new ArrayList<Phrase>();
 				phraseList = XmlReader.GetPhraseList(xmlList);
-				phraseList = PostProcessing.restoreOtherMedicineName(phraseList, otherMedicineNameMap);	//対象でない薬剤名を元に戻す
 
 				//三つ組取得
-				ArrayList<TriplePhrase> triplePhraseListFirst = GetTriplePhraseListFirst.getTriplePhrase(phraseList);
+				ArrayList<TriplePhrase> triplePhraseListFirst 
+												= GetTriplePhraseListFirst.getTriplePhrase(phraseList, medicineNameMap);
+				
 				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
 
 				if(triplePhraseListFirst.size() != 0){
-					tripleSetListFirst = getTripleSetList(triplePhraseListFirst, TargetMedicineName);
+					tripleSetListFirst = getTripleSetList(triplePhraseListFirst);
 				}
 				
 //				if(triplePhraseListSecond.size() != 0){
@@ -127,12 +130,13 @@ public class Main {
 	}
 
 	//三つ組リスト取得
-	public static ArrayList<TripleSet> getTripleSetList(ArrayList<TriplePhrase> triplePhraseListFirst, String medicineName){
+	public static ArrayList<TripleSet> getTripleSetList(ArrayList<TriplePhrase> triplePhraseListFirst){
 		
 		ArrayList<TripleSet> tripleSetList = new ArrayList<TripleSet>();
+		//triplePhraseListFirst = PostProcessing.restoreMedicineName(triplePhraseListFirst , medicineNameMap); //薬剤名置き換え
 		
 		for(TriplePhrase triplePhrase : triplePhraseListFirst){
-			TripleSet tripleSet = makeTripleSet(triplePhrase, medicineName);
+			TripleSet tripleSet = makeTripleSet(triplePhrase, triplePhrase.getMedicineName());
 			//if(!Filtering.filterTarget(tripleSet)){ continue; }	//110番辞書フィルタ
 			PostProcessing.deleteParentheses(tripleSet);
 			tripleSetList.add(tripleSet);
@@ -144,34 +148,10 @@ public class Main {
 	//三つ組取得
 	public static TripleSet makeTripleSet(TriplePhrase triplePhrase, String medicineName){
 		
-		triplePhrase.setMedicineName(medicineName);	//薬剤名セット
-		triplePhrase = replaceMedicineName(triplePhrase , medicineName); //薬剤名置き換え
+		//triplePhrase.setMedicineName(medicineName);	//薬剤名セット
+		//triplePhrase = PostProcessing.restoreMedicineName(triplePhrase , medicineNameMap); //薬剤名置き換え
 		TripleSet tripleSet = GetTripleSet.getTripleSet(triplePhrase);	//三つ組取得
 		return tripleSet;
-	}
-
-	//薬剤名置き換え
-	public static TriplePhrase replaceMedicineName(TriplePhrase triplePhrase, String medicineName){
-
-		ArrayList<Phrase> targetPhraseList = triplePhrase.getTargetPhraseList();
-		Phrase effectPhrase = triplePhrase.getEffectPhrase();
-
-		for(Phrase targetPhrase : targetPhraseList){
-			if(targetPhrase.getPhraseText().contains(TARGETMEDICINE)){
-				targetPhrase.setPhraseText(targetPhrase.getPhraseText().replace(TARGETMEDICINE, medicineName));
-				for(Morpheme morpheme : targetPhrase.getMorphemeList()){
-					if(!morpheme.getMorphemeText().contains(TARGETMEDICINE)){ continue; }
-					morpheme.setMorphemeText(morpheme.getMorphemeText().replace(TARGETMEDICINE, medicineName));
-				}
-			}
-		}
-		
-		effectPhrase.setPhraseText(effectPhrase.getPhraseText().replace(TARGETMEDICINE, medicineName));
-		for(Morpheme morpheme : effectPhrase.getMorphemeList()){
-			if(!morpheme.getMorphemeText().contains(TARGETMEDICINE)){ continue; }
-			morpheme.setMorphemeText(morpheme.getMorphemeText().replace(TARGETMEDICINE, medicineName));
-		}
-		return triplePhrase;
 	}
 
 	//ステータス表示

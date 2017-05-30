@@ -37,16 +37,17 @@ public class PreProcessing {
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static String replaceMedicineName(String sentenceText, String targetMediceneName, 
-														TreeMap<Integer, String> otherMedicineNameMap){
+	public static String replaceMedicineName(String sentenceText, TreeMap<Integer, String> medicineNameMap){
 
-		if(sentenceText.contains(targetMediceneName)){
-			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
-		}
+//		if(sentenceText.contains(targetMediceneName)){
+//			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
+//		}
 		
-		for(Entry<Integer, String> map : otherMedicineNameMap.entrySet()){
-			if(sentenceText.contains(map.getValue())){
-				sentenceText = sentenceText.replace(map.getValue(),"OTHERMEDICINE");
+		for(Entry<Integer, String> map : medicineNameMap.entrySet()){
+			String medicineName = map.getValue();
+			
+			if(sentenceText.contains(medicineName)){
+				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
 			}
 		}
 
@@ -54,24 +55,24 @@ public class PreProcessing {
 		return sentenceText;
 	}
 	
-	//対象でない薬剤名マップ取得
-	public static TreeMap<Integer, String> getOtherMedicineNameMap(String sentenceText, String TargetMedicineName){
-		TreeMap<Integer, String> otherMedicineNameMap = new TreeMap<Integer, String>();
+	//薬剤名マップ取得
+	public static TreeMap<Integer, String> getMedicineNameMap(String sentenceText){
+		TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
 		ArrayList<String> medicineNameList = new ArrayList<String>();
 		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
 		
 		for(String medicineNameInList : medicineNameList){
-			if(medicineNameInList.equals(TargetMedicineName)){ continue; }
+			//if(medicineNameInList.equals(TargetMedicineName)){ continue; }
 			int searchIndex = 0;
 			if(sentenceText.contains(medicineNameInList)){
 				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
 				while(searchIndex != -1){
-					otherMedicineNameMap.put(searchIndex, medicineNameInList);
+					medicineNameMap.put(searchIndex, medicineNameInList);
 					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
 				}
 			}
 		}
-		return otherMedicineNameMap;
+		return medicineNameMap;
 	}
 	
 	
