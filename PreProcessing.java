@@ -37,57 +37,35 @@ public class PreProcessing {
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static String replaceMedicineName(String sentenceText, ArrayList<String> medicineNameList){
+	public static String replaceMedicineName(String sentenceText, TreeMap<Integer, String> medicineNameMap){
 
 		//		if(sentenceText.contains(targetMediceneName)){
 		//			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
 		//		}
 
 
-		for(String medicineName : medicineNameList){
-			if(sentenceText.contains(medicineName)){
-				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
-			}
-		}
-
-
-		//		for(Entry<Integer, String> map : medicineNameMap.entrySet()){
-		//			String medicineName = map.getValue();
-		//			
+		//		for(String medicineName : medicineNameList){
 		//			if(sentenceText.contains(medicineName)){
 		//				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
 		//			}
 		//		}
 
+		for(Entry<Integer, String> map : medicineNameMap.entrySet()){
+			String medicineName = map.getValue();
+
+			if(sentenceText.contains(medicineName)){
+				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
+			}
+		}
+
 		//System.out.println(sentenceText);
 		return sentenceText;
 	}
 
-	//	//薬剤名マップ取得
-	//	public static TreeMap<Integer, String> getMedicineNameMap(String sentenceText){
-	//		TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
-	//		ArrayList<String> medicineNameList = new ArrayList<String>();
-	//		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
-	//		
-	//		for(String medicineNameInList : medicineNameList){
-	//			//if(medicineNameInList.equals(TargetMedicineName)){ continue; }
-	//			int searchIndex = 0;
-	//			if(sentenceText.contains(medicineNameInList)){
-	//				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
-	//				while(searchIndex != -1){
-	//					medicineNameMap.put(searchIndex, medicineNameInList);
-	//					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
-	//				}
-	//			}
-	//		}
-	//		return medicineNameMap;
-	//	}
-
-	//薬剤名リスト取得
-	public static ArrayList<String> getMedicineNameListInSentence(String sentenceText, ArrayList<String> medicineNameList){
-		//TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
+	//薬剤名マップ取得
+	public static TreeMap<Integer, String> getMedicineNameMap(String sentenceText, ArrayList<String> medicineNameList){
+		TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
 		//ArrayList<String> medicineNameList = new ArrayList<String>();
-		ArrayList<String> medicineNameListInSentence = new ArrayList<String>();
 		//medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
 
 		for(String medicineNameInList : medicineNameList){
@@ -96,16 +74,37 @@ public class PreProcessing {
 			if(sentenceText.contains(medicineNameInList)){
 				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
 				while(searchIndex != -1){
-					medicineNameListInSentence.add(medicineNameInList);
-					//medicineNameMap.put(searchIndex, medicineNameInDic);
+					medicineNameMap.put(searchIndex, medicineNameInList);
 					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
 				}
 			}
 		}
-		return medicineNameListInSentence;
+		return medicineNameMap;
 	}
-	
-	
+
+	//薬剤名リスト取得
+	//	public static ArrayList<String> getMedicineNameInSentenceList(String sentenceText, ArrayList<String> medicineNameList){
+	//		//TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
+	//		//ArrayList<String> medicineNameList = new ArrayList<String>();
+	//		ArrayList<String> medicineNameListInSentence = new ArrayList<String>();
+	//		//medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+	//
+	//		for(String medicineNameInList : medicineNameList){
+	//			//if(medicineNameInList.equals(TargetMedicineName)){ continue; }
+	//			int searchIndex = 0;
+	//			if(sentenceText.contains(medicineNameInList)){
+	//				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
+	//				while(searchIndex != -1){
+	//					medicineNameListInSentence.add(medicineNameInList);
+	//					//medicineNameMap.put(searchIndex, medicineNameInDic);
+	//					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
+	//				}
+	//			}
+	//		}
+	//		return medicineNameListInSentence;
+	//	}
+
+
 
 
 

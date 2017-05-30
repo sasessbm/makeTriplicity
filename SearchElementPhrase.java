@@ -42,7 +42,7 @@ public class SearchElementPhrase {
 
 			if(medicinePlaceIndex == -1){ continue; }
 			
-			tripleSetInfo.setMedicinePhraseId(medicinePlaceIndex);
+			tripleSetInfo.setMedicinePhraseId(phrase.getId());
 
 			// 同じ文節内にある
 			if(keywordPlaceIndex > 0){

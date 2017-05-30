@@ -2,11 +2,12 @@ package makeTriplicity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeMap;
 
-public class GetTripleSet {
+public class GetTripleSetList {
 	
 	public static ArrayList<TripleSet> getTripleSetList
-				(ArrayList<TripleSetInfo> tripleSetInfoList, ArrayList<Phrase> phraseList, ArrayList<String> medicineNameList) {
+			(ArrayList<TripleSetInfo> tripleSetInfoList, ArrayList<Phrase> phraseList, TreeMap<Integer, String> medicineNameMap) {
 
 		ArrayList<TripleSet> tripleSetlist = new ArrayList<TripleSet>();
 		
@@ -16,6 +17,7 @@ public class GetTripleSet {
 			int targetPhraseId = tripleSetInfo.getTargetPhraseId();
 			int effectPhraseId = tripleSetInfo.getEffectPhraseId();
 			
+			ArrayList<String> medicineNameInPhraseList = new ArrayList<String>();
 			ArrayList<Morpheme> targetMorphemeList = new ArrayList<Morpheme>();
 			ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
 			Element targetElement = new Element();
@@ -24,9 +26,18 @@ public class GetTripleSet {
 			
 			for(Morpheme morpheme : phraseList.get(medicinePhraseId).getMorphemeList()){
 				if(!morpheme.getPartOfSpeech().equals("名詞")){ continue; }
-				for(String medicineNameInList : medicineNameList){
-					if(morpheme.getMorphemeText().equals(medicineNameInList)){
-						
+//				for(String medicineNameInList : medicineNameList){
+//					String morphemeText = morpheme.getMorphemeText();
+//					if(morpheme.getMorphemeText().equals(medicineNameInList)){
+//						medicineNameInPhraseList.add(morphemeText);
+//					}
+//				}
+				
+				for(Integer key : medicineNameMap.keySet()){
+					String medicineName = medicineNameMap.get(key);
+					String morphemeText = morpheme.getMorphemeText();
+					if(morphemeText.equals(medicineName)){
+						medicineNameInPhraseList.add(morphemeText);
 					}
 				}
 			}
@@ -53,14 +64,14 @@ public class GetTripleSet {
 			targetElement = getElement(targetMorphemeList, 1);
 			effectElement = getElement(effectMorphemeList, 2);
 			
-			tripleSet.setMedicineName(medicineName);
-			tripleSet.setTargetElement(targetElement);
-			tripleSet.setEffectElement(effectElement);
-			tripleSetlist.add(tripleSet);
+			for(String medicineNameInPhrase : medicineNameInPhraseList){
+				tripleSet.setMedicineName(medicineNameInPhrase);
+				tripleSet.setTargetElement(targetElement);
+				tripleSet.setEffectElement(effectElement);
+				tripleSetlist.add(tripleSet);
+			}
 		}
-		
 		return tripleSetlist;
-		
 	}
 
 	public static Element getElement(ArrayList<Morpheme> morphemeList, int elementType){

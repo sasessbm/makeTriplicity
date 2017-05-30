@@ -21,7 +21,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		ArrayList<TripleSet> tripleSetList = run(19,19);
+		ArrayList<TripleSet> tripleSetList = run(0,3000);
 	}
 
 	public static ArrayList<TripleSet> run(int startRecordNum, int endRecordNum) throws Exception {
@@ -44,7 +44,7 @@ public class Main {
 			String TargetMedicineName = record.getMedicineName();
 			String sentenceTextBefore = "";
 			
-			System.out.println(snippetText);
+			//System.out.println(snippetText);
 
 			//if(!snippetText.contains("。")){ continue; }	//"。"が無いスニペットは対象としない
 			if(!snippetText.contains(TargetMedicineName)){ continue; }  //対象薬剤名が無いスニペットは対象としない
@@ -64,12 +64,14 @@ public class Main {
 				sentenceTextBefore = sentenceText;
 
 				//前処理
-				//TreeMap<Integer, String> medicineNameMap = PreProcessing.getMedicineNameMap(sentenceText); //薬剤名取得
-				ArrayList<String> medicineNameList = PreProcessing.getMedicineNameListInSentence(sentenceText, medicineNameList);
+				TreeMap<Integer, String> medicineNameMap = 
+								PreProcessing.getMedicineNameMap(sentenceText,medicineNameList); //薬剤名取得
+//				ArrayList<String> medicineNameInSentenceList = 
+//						PreProcessing.getMedicineNameInSentenceList(sentenceText, medicineNameList);
 				
 				//PostProcessing.medicineNameMap = medicineNameMap; // 後処理クラスに代入
 				sentenceText = 
-						PreProcessing.replaceMedicineName(sentenceText, medicineNameList);	//薬剤名置き換え
+						PreProcessing.replaceMedicineName(sentenceText, medicineNameMap);	//薬剤名置き換え
 				sentenceText = PreProcessing.deleteParentheses(sentenceText);	//括弧削除
 				sentenceText = PreProcessing.deleteSpace(sentenceText);	//スペース削除
 
@@ -87,15 +89,10 @@ public class Main {
 //				ArrayList<TriplePhrase> triplePhraseListFirst 
 //										= GetTriplePhraseListFirst.getTriplePhrase(phraseList, phraseRestoreList);
 				ArrayList<TripleSetInfo> tripleSetInfoList = SearchElementPhrase.getTripleSetInfoList(phraseList);
-				phraseList = PostProcessing.restoreMedicineName(phraseList, medicineNameList);
+				phraseList = PostProcessing.restoreMedicineName(phraseList, medicineNameMap);
+				
 				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
-				
-				for(TripleSetInfo tripleSetInfo : tripleSetInfoList){
-					TripleSet tripleSet = GetTripleSet.getTripleSet(tripleSetInfo, phraseList);
-					tripleSetListFirst.add(tripleSet);
-				}
-				
-				
+				tripleSetListFirst = GetTripleSetList.getTripleSetList(tripleSetInfoList, phraseList, medicineNameMap);
 				
 				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
 				//ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();

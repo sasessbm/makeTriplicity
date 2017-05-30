@@ -36,59 +36,58 @@ public class PostProcessing {
 //	}
 
 //	//薬剤名を戻す
-//	public static ArrayList<Phrase> restoreMedicineName
-//				(ArrayList<Phrase> phraseRestoreList, TreeMap<Integer, String> medicineNameMap){
-//		
-//		//ArrayList<Phrase> phraseListTemp = new ArrayList<Phrase>();
-//		
-//		//phraseListTemp = phraseList;
-//
-//		for(Integer key : medicineNameMap.keySet()){
-//
-//			String medicineName = medicineNameMap.get(key);
-//
-//			for(Phrase phrase : phraseRestoreList){
-//				if(phrase.getPhraseText().contains(MEDICINE)){
-//					phrase.setPhraseText(phrase.getPhraseText().replaceFirst(MEDICINE, medicineName));
-//					for(Morpheme morpheme : phrase.getMorphemeList()){
-//						if(!morpheme.getMorphemeText().equals(MEDICINE)){ continue; }
-//						morpheme.setMorphemeText(medicineName);
-//						break;
-//					}
-//					break;
-//				}
-//			}
-//		}
-//		return phraseListTemp;
-//	}
-	
-	//薬剤名を戻す
-		public static ArrayList<Phrase> restoreMedicineName
-					(ArrayList<Phrase> phraseRestoreList, ArrayList<String> medicineNameList){
-			
-			
-			for(String medicineName : medicineNameList){
-				
-				for(Phrase phrase : phraseRestoreList){
-					Phrase restorePhrase = new Phrase();
-					String phraseText = phrase.getPhraseText();
-					
-					if(phraseText.contains(MEDICINE)){
-						restorePhrase.setPhraseText(phraseText.replaceFirst(MEDICINE, medicineName));
-						//phrase.setPhraseText(phraseText.replaceFirst(MEDICINE, medicineName));
-						for(Morpheme morpheme : phrase.getMorphemeList()){
-							if(!morpheme.getMorphemeText().equals(MEDICINE)){ continue; }
-							morpheme.setMorphemeText(medicineName);
-							break;
-						}
+	public static ArrayList<Phrase> restoreMedicineName
+				(ArrayList<Phrase> phraseList, TreeMap<Integer, String> medicineNameMap){
+		
+		//ArrayList<Phrase> phraseListTemp = new ArrayList<Phrase>();
+		
+		//phraseListTemp = phraseList;
+
+		for(Integer key : medicineNameMap.keySet()){
+
+			String medicineName = medicineNameMap.get(key);
+
+			for(Phrase phrase : phraseList){
+				if(phrase.getPhraseText().contains(MEDICINE)){
+					phrase.setPhraseText(phrase.getPhraseText().replaceFirst(MEDICINE, medicineName));
+					for(Morpheme morpheme : phrase.getMorphemeList()){
+						if(!morpheme.getMorphemeText().equals(MEDICINE)){ continue; }
+						morpheme.setMorphemeText(medicineName);
 						break;
 					}
+					break;
 				}
-				
 			}
-
-			return phraseRestoreList;
 		}
+		return phraseList;
+	}
+	
+//	//薬剤名を戻す
+//		public static ArrayList<Phrase> restoreMedicineName
+//					(ArrayList<Phrase> phraseList, ArrayList<String> medicineNameInSentenceList){
+//			
+//			for(String medicineName : medicineNameInSentenceList){
+//				
+//				for(Phrase phrase : phraseList){
+//					//Phrase restorePhrase = new Phrase();
+//					String phraseText = phrase.getPhraseText();
+//					
+//					if(phraseText.contains(MEDICINE)){
+//						phrase.setPhraseText(phraseText.replaceFirst(MEDICINE, medicineName));
+//						//phrase.setPhraseText(phraseText.replaceFirst(MEDICINE, medicineName));
+//						for(Morpheme morpheme : phrase.getMorphemeList()){
+//							if(!morpheme.getMorphemeText().equals(MEDICINE)){ continue; }
+//							morpheme.setMorphemeText(medicineName);
+//							break;
+//						}
+//						break;
+//					}
+//				}
+//				
+//			}
+//
+//			return phraseList;
+//		}
 
 	//	public static Phrase restoreMedicineName(Phrase phrase, int medicineIndex){
 	//		
