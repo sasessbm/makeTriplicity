@@ -1,46 +1,66 @@
 package makeTriplicity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GetTripleSet {
+	
+	public static ArrayList<TripleSet> getTripleSetList
+				(ArrayList<TripleSetInfo> tripleSetInfoList, ArrayList<Phrase> phraseList, ArrayList<String> medicineNameList) {
 
-	public static TripleSet getTripleSet(TriplePhrase triplePhrase) {
-
-		TripleSet tripleSet = new TripleSet();
-
-		String medicineName = triplePhrase.getMedicineName();
-		Element targetElement = new Element();
-		Element effectElement = new Element();
-
-		ArrayList<Morpheme> targetMorphemeList = new ArrayList<Morpheme>();
-		ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
-
-		for(Phrase phrase : triplePhrase.getTargetPhraseList()){
-			for(Morpheme morpheme : phrase.getMorphemeList()){
-				targetMorphemeList.add(morpheme);
+		ArrayList<TripleSet> tripleSetlist = new ArrayList<TripleSet>();
+		
+		for(TripleSetInfo tripleSetInfo : tripleSetInfoList){
+			TripleSet tripleSet = new TripleSet();
+			int medicinePhraseId = tripleSetInfo.getMedicinePhraseId();
+			int targetPhraseId = tripleSetInfo.getTargetPhraseId();
+			int effectPhraseId = tripleSetInfo.getEffectPhraseId();
+			
+			ArrayList<Morpheme> targetMorphemeList = new ArrayList<Morpheme>();
+			ArrayList<Morpheme> effectMorphemeList = new ArrayList<Morpheme>();
+			Element targetElement = new Element();
+			Element effectElement = new Element();
+			int searchIndex = 0;
+			
+			for(Morpheme morpheme : phraseList.get(medicinePhraseId).getMorphemeList()){
+				if(!morpheme.getPartOfSpeech().equals("名詞")){ continue; }
+				for(String medicineNameInList : medicineNameList){
+					if(morpheme.getMorphemeText().equals(medicineNameInList)){
+						
+					}
+				}
 			}
+			
+			// 対象要素の形態素リスト取得
+			Phrase Phrase = phraseList.get(targetPhraseId - searchIndex);
+			ArrayList<Morpheme> morphemeList = Phrase.getMorphemeList();
+			while(true){
+				Collections.reverse(morphemeList);
+				targetMorphemeList.addAll(morphemeList);
+				searchIndex++;
+				Phrase = phraseList.get(targetPhraseId - searchIndex);
+				morphemeList = Phrase.getMorphemeList();
+				if(!morphemeList.get(morphemeList.size()-1).equals("の")){ break; }
+			}
+			Collections.reverse(targetMorphemeList);
+			
+			// 効果要素の形態素リスト取得
+			for(Morpheme morpheme : phraseList.get(effectPhraseId).getMorphemeList()){
+				effectMorphemeList.add(morpheme);
+			}
+			
+			// 要素取得
+			targetElement = getElement(targetMorphemeList, 1);
+			effectElement = getElement(effectMorphemeList, 2);
+			
+			tripleSet.setMedicineName(medicineName);
+			tripleSet.setTargetElement(targetElement);
+			tripleSet.setEffectElement(effectElement);
+			tripleSetlist.add(tripleSet);
 		}
-
-		for(Morpheme morpheme : triplePhrase.getEffectPhrase().getMorphemeList()){
-			effectMorphemeList.add(morpheme);
-		}
-
-		targetElement = getElement(targetMorphemeList, 1);
-		effectElement = getElement(effectMorphemeList, 2);
-		//		String targetText = "";
-		//		for(Morpheme targetMorpheme : targetMorphemeList){
-		//			targetText += targetMorpheme.getMorphemeText();
-		//		}
-		//		targetElement.setText(targetText.replace("、", ""));
-		//		targetElement.setMorphemeList(targetMorphemeList);
-		//		effectElement.setText(triplePhrase.getEffectPhrase().getPhraseText().replace("、", ""));
-		//		effectElement.setMorphemeList(effectMorphemeList);
-		//		
-		tripleSet.setMedicineName(medicineName);
-		tripleSet.setTargetElement(targetElement);
-		tripleSet.setEffectElement(effectElement);
-
-		return tripleSet;
+		
+		return tripleSetlist;
+		
 	}
 
 	public static Element getElement(ArrayList<Morpheme> morphemeList, int elementType){

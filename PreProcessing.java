@@ -5,14 +5,14 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class PreProcessing {
-	
+
 	public static String deleteSpace(String sentenceText){
-		
+
 		//半角
 		sentenceText = sentenceText.replace(" ", "");
 		//全角
 		sentenceText = sentenceText.replace("　", "");
-		
+
 		return sentenceText;
 	}
 
@@ -37,45 +37,77 @@ public class PreProcessing {
 	}
 
 	//薬剤名を"MEDICINE"に置き換える
-	public static String replaceMedicineName(String sentenceText, TreeMap<Integer, String> medicineNameMap){
+	public static String replaceMedicineName(String sentenceText, ArrayList<String> medicineNameList){
 
-//		if(sentenceText.contains(targetMediceneName)){
-//			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
-//		}
-		
-		for(Entry<Integer, String> map : medicineNameMap.entrySet()){
-			String medicineName = map.getValue();
-			
+		//		if(sentenceText.contains(targetMediceneName)){
+		//			sentenceText = sentenceText.replace(targetMediceneName,"TARGETMEDICINE");
+		//		}
+
+
+		for(String medicineName : medicineNameList){
 			if(sentenceText.contains(medicineName)){
 				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
 			}
 		}
 
+
+		//		for(Entry<Integer, String> map : medicineNameMap.entrySet()){
+		//			String medicineName = map.getValue();
+		//			
+		//			if(sentenceText.contains(medicineName)){
+		//				sentenceText = sentenceText.replace(medicineName,"MEDICINE");
+		//			}
+		//		}
+
 		//System.out.println(sentenceText);
 		return sentenceText;
 	}
-	
-	//薬剤名マップ取得
-	public static TreeMap<Integer, String> getMedicineNameMap(String sentenceText){
-		TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
-		ArrayList<String> medicineNameList = new ArrayList<String>();
-		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
-		
+
+	//	//薬剤名マップ取得
+	//	public static TreeMap<Integer, String> getMedicineNameMap(String sentenceText){
+	//		TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
+	//		ArrayList<String> medicineNameList = new ArrayList<String>();
+	//		medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+	//		
+	//		for(String medicineNameInList : medicineNameList){
+	//			//if(medicineNameInList.equals(TargetMedicineName)){ continue; }
+	//			int searchIndex = 0;
+	//			if(sentenceText.contains(medicineNameInList)){
+	//				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
+	//				while(searchIndex != -1){
+	//					medicineNameMap.put(searchIndex, medicineNameInList);
+	//					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
+	//				}
+	//			}
+	//		}
+	//		return medicineNameMap;
+	//	}
+
+	//薬剤名リスト取得
+	public static ArrayList<String> getMedicineNameListInSentence(String sentenceText, ArrayList<String> medicineNameList){
+		//TreeMap<Integer, String> medicineNameMap = new TreeMap<Integer, String>();
+		//ArrayList<String> medicineNameList = new ArrayList<String>();
+		ArrayList<String> medicineNameListInSentence = new ArrayList<String>();
+		//medicineNameList = GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
+
 		for(String medicineNameInList : medicineNameList){
 			//if(medicineNameInList.equals(TargetMedicineName)){ continue; }
 			int searchIndex = 0;
 			if(sentenceText.contains(medicineNameInList)){
 				searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex);
 				while(searchIndex != -1){
-					medicineNameMap.put(searchIndex, medicineNameInList);
+					medicineNameListInSentence.add(medicineNameInList);
+					//medicineNameMap.put(searchIndex, medicineNameInDic);
 					searchIndex = sentenceText.indexOf(medicineNameInList, searchIndex + 1);
 				}
 			}
 		}
-		return medicineNameMap;
+		return medicineNameListInSentence;
 	}
 	
 	
+
+
 
 	//薬剤名を含まない()削除
 	public static String deleteParentheses(String sentenceText){
@@ -116,8 +148,8 @@ public class PreProcessing {
 		}
 		return sentenceText;	
 	}
-	
-	
+
+
 	public static String deleteBothSideDots(String snippetText){
 		snippetText = snippetText.substring(3, snippetText.length()-3);
 		return snippetText;

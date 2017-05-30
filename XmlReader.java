@@ -2,7 +2,6 @@ package makeTriplicity;
 
 
 import java.io.IOException;
-
 import java.io.StringReader;
 import java.util.ArrayList;
 
@@ -107,6 +106,11 @@ public class XmlReader {
 			}
 
 		}
+		
+//		System.out.println("in XmlReader");
+//		for(Phrase phrase : phraseList){
+//			System.out.println(phrase.getPhraseText());
+//		}
 		
 		return phraseList;
 	}

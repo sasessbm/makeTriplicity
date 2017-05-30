@@ -16,7 +16,8 @@ public class Main {
 	public static final String DIVISION_LINE = "--------------------------------------------------------"
 												 + "--------------------------------------------------------";
 	
-	private static TreeMap<Integer, String> medicineNameMap;
+	private static ArrayList<String> medicineNameList 
+									= GetTextFileList.fileRead("C:\\Users\\sase\\Desktop\\実験\\リスト\\medicine_name.txt");
 
 	public static void main(String[] args) throws Exception {
 
@@ -63,10 +64,12 @@ public class Main {
 				sentenceTextBefore = sentenceText;
 
 				//前処理
-				medicineNameMap = PreProcessing.getMedicineNameMap(sentenceText); //薬剤名取得
+				//TreeMap<Integer, String> medicineNameMap = PreProcessing.getMedicineNameMap(sentenceText); //薬剤名取得
+				ArrayList<String> medicineNameList = PreProcessing.getMedicineNameListInSentence(sentenceText, medicineNameList);
+				
 				//PostProcessing.medicineNameMap = medicineNameMap; // 後処理クラスに代入
 				sentenceText = 
-						PreProcessing.replaceMedicineName(sentenceText, medicineNameMap);	//薬剤名置き換え
+						PreProcessing.replaceMedicineName(sentenceText, medicineNameList);	//薬剤名置き換え
 				sentenceText = PreProcessing.deleteParentheses(sentenceText);	//括弧削除
 				sentenceText = PreProcessing.deleteSpace(sentenceText);	//スペース削除
 
@@ -81,16 +84,26 @@ public class Main {
 				phraseList = XmlReader.GetPhraseList(xmlList);
 
 				//三つ組取得
-				ArrayList<TriplePhrase> triplePhraseListFirst 
-												= GetTriplePhraseListFirst.getTriplePhrase(phraseList, medicineNameMap);
+//				ArrayList<TriplePhrase> triplePhraseListFirst 
+//										= GetTriplePhraseListFirst.getTriplePhrase(phraseList, phraseRestoreList);
+				ArrayList<TripleSetInfo> tripleSetInfoList = SearchElementPhrase.getTripleSetInfoList(phraseList);
+				phraseList = PostProcessing.restoreMedicineName(phraseList, medicineNameList);
+				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
+				
+				for(TripleSetInfo tripleSetInfo : tripleSetInfoList){
+					TripleSet tripleSet = GetTripleSet.getTripleSet(tripleSetInfo, phraseList);
+					tripleSetListFirst.add(tripleSet);
+				}
+				
+				
 				
 				//ArrayList<TriplePhrase> triplePhraseListSecond = GetTriplePhraseListSecond.getTriplePhrase(phraseList);
-				ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
+				//ArrayList<TripleSet> tripleSetListFirst = new ArrayList<TripleSet>();
 				ArrayList<TripleSet> tripleSetListSecond = new ArrayList<TripleSet>();
 
-				if(triplePhraseListFirst.size() != 0){
-					tripleSetListFirst = getTripleSetList(triplePhraseListFirst);
-				}
+//				if(tripleSetListFirst.size() != 0){
+//					tripleSetListFirst = getTripleSetList(triplePhraseListFirst);
+//				}
 				
 //				if(triplePhraseListSecond.size() != 0){
 //					tripleSetListSecond = getTripleSetList(triplePhraseListSecond, TargetMedicineName);
@@ -150,7 +163,7 @@ public class Main {
 		
 		//triplePhrase.setMedicineName(medicineName);	//薬剤名セット
 		//triplePhrase = PostProcessing.restoreMedicineName(triplePhrase , medicineNameMap); //薬剤名置き換え
-		TripleSet tripleSet = GetTripleSet.getTripleSet(triplePhrase);	//三つ組取得
+		TripleSet tripleSet = GetTripleSetBefore.getTripleSet(triplePhrase);	//三つ組取得
 		return tripleSet;
 	}
 
