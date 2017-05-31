@@ -51,8 +51,8 @@ public class PostProcessing {
 				if(phrase.getPhraseText().contains(MEDICINE)){
 					phrase.setPhraseText(phrase.getPhraseText().replaceFirst(MEDICINE, medicineName));
 					for(Morpheme morpheme : phrase.getMorphemeList()){
-						if(!morpheme.getMorphemeText().equals(MEDICINE)){ continue; }
-						morpheme.setMorphemeText(medicineName);
+						if(!morpheme.getMorphemeText().contains(MEDICINE)){ continue; }
+						morpheme.setMorphemeText(morpheme.getMorphemeText().replaceFirst(MEDICINE, medicineName));
 						break;
 					}
 					break;

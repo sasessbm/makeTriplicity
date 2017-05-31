@@ -12,7 +12,7 @@ public class GetTripleSetList {
 		ArrayList<TripleSet> tripleSetlist = new ArrayList<TripleSet>();
 		
 		for(TripleSetInfo tripleSetInfo : tripleSetInfoList){
-			TripleSet tripleSet = new TripleSet();
+			
 			int medicinePhraseId = tripleSetInfo.getMedicinePhraseId();
 			int targetPhraseId = tripleSetInfo.getTargetPhraseId();
 			int effectPhraseId = tripleSetInfo.getEffectPhraseId();
@@ -36,8 +36,9 @@ public class GetTripleSetList {
 				for(Integer key : medicineNameMap.keySet()){
 					String medicineName = medicineNameMap.get(key);
 					String morphemeText = morpheme.getMorphemeText();
-					if(morphemeText.equals(medicineName)){
-						medicineNameInPhraseList.add(morphemeText);
+					if(morphemeText.contains(medicineName)){
+						medicineNameInPhraseList.add(medicineName);
+						break;
 					}
 				}
 			}
@@ -48,6 +49,7 @@ public class GetTripleSetList {
 			while(true){
 				Collections.reverse(morphemeList);
 				targetMorphemeList.addAll(morphemeList);
+				Collections.reverse(morphemeList);
 				searchIndex++;
 				Phrase = phraseList.get(targetPhraseId - searchIndex);
 				morphemeList = Phrase.getMorphemeList();
@@ -65,6 +67,7 @@ public class GetTripleSetList {
 			effectElement = getElement(effectMorphemeList, 2);
 			
 			for(String medicineNameInPhrase : medicineNameInPhraseList){
+				TripleSet tripleSet = new TripleSet();
 				tripleSet.setMedicineName(medicineNameInPhrase);
 				tripleSet.setTargetElement(targetElement);
 				tripleSet.setEffectElement(effectElement);
